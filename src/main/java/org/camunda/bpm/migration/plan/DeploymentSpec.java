@@ -1,17 +1,17 @@
 package org.camunda.bpm.migration.plan;
 
-import java.time.ZonedDateTime;
-
 import lombok.Builder;
 import lombok.Data;
+
+import java.time.ZonedDateTime;
 
 @Data
 @Builder
 public class DeploymentSpec {
-    String id;
-    String name;
-    ZonedDateTime earliestDeployment;
-    ZonedDateTime latestDeployment;
-    String source;
-    String tenantId;
+	String id;
+	String name;
+	ZonedDateTime earliestDeployment;
+	ZonedDateTime latestDeployment;
+	String source;
+	String tenantId;
 }

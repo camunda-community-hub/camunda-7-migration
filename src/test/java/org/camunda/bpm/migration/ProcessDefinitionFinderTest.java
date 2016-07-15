@@ -26,7 +26,7 @@ public class ProcessDefinitionFinderTest {
 
 	@Before
 	public void deploy() {
-        finder  = new ProcessDefinitionFinder(processEngineRule.getRepositoryService());
+		finder = new ProcessDefinitionFinder(processEngineRule.getRepositoryService());
 		deployer = DummyProcessDeployer.builder().repositoryService(processEngineRule.getRepositoryService())
 				.source(getClass().getSimpleName())
 				.model(build("foo", "v2.0"))
