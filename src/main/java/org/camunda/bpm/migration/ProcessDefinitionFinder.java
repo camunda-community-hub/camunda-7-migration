@@ -1,12 +1,5 @@
 package org.camunda.bpm.migration;
 
-import java.time.Instant;
-import java.time.ZonedDateTime;
-import java.util.Date;
-import java.util.Optional;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-
 import org.camunda.bpm.engine.RepositoryService;
 import org.camunda.bpm.engine.repository.Deployment;
 import org.camunda.bpm.engine.repository.DeploymentQuery;
@@ -15,65 +8,87 @@ import org.camunda.bpm.engine.repository.ProcessDefinitionQuery;
 import org.camunda.bpm.migration.plan.DeploymentSpec;
 import org.camunda.bpm.migration.plan.ProcessDefinitionSpec;
 
+import java.time.ZonedDateTime;
+import java.util.Date;
+import java.util.Optional;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+
 
 public class ProcessDefinitionFinder {
 
-    private final RepositoryService repositoryService;
+	private final RepositoryService repositoryService;
 
-    public ProcessDefinitionFinder(RepositoryService repositoryService) {
-        this.repositoryService = repositoryService;
-    }
+	public ProcessDefinitionFinder(RepositoryService repositoryService) {
+		this.repositoryService = repositoryService;
+	}
 
-    ProcessDefinition find(ProcessDefinitionSpec spec) {
-        ProcessDefinitionQuery processDefinitionQuery = repositoryService.createProcessDefinitionQuery();
-        if(spec.getProcessDefinitionKey() != null) {
-            processDefinitionQuery.processDefinitionKey(spec.getProcessDefinitionKey());
-        }
-        if(spec.getVersionTag() != null) {
-            processDefinitionQuery.versionTag(spec.getVersionTag());
-        }
-        if(spec.getVersion() != null) {
-            processDefinitionQuery.processDefinitionVersion(spec.getVersion());
-        }
-        if(spec.getDeploymentSpec() != null) {
-            findDeployment(spec.getDeploymentSpec()).ifPresent(
-                    deployment -> processDefinitionQuery.deploymentId(deployment.getId())
-            );
-            findDeployment(spec.getDeploymentSpec()).ifPresent(
-                    deployment -> System.out.println("SRC "+deployment.getSource())
-            );
-        }
+	ProcessDefinition find(ProcessDefinitionSpec spec) {
+		ProcessDefinitionQuery processDefinitionQuery = repositoryService.createProcessDefinitionQuery();
 
-        return processDefinitionQuery.singleResult();
-    }
+		add(processDefinitionQuery, ProcessDefinitionQuery::processDefinitionKey, spec.getProcessDefinitionKey());
+		add(processDefinitionQuery, ProcessDefinitionQuery::versionTag, spec.getVersionTag());
+		add(processDefinitionQuery, ProcessDefinitionQuery::processDefinitionVersion, spec.getProcessDefinitionVersion());
 
-    private Optional<Deployment> findDeployment(DeploymentSpec spec) {
-        return Optional.ofNullable(createDeploymentQuery(spec).singleResult());
-    }
+		if (spec.getDeploymentSpec() != null) {
+			findDeployment(spec.getDeploymentSpec()).ifPresent(
+					deployment -> processDefinitionQuery.deploymentId(deployment.getId())
+			);
+			findDeployment(spec.getDeploymentSpec()).ifPresent(
+					deployment -> System.out.println("SRC " + deployment.getSource())
+			);
+		}
 
-    private DeploymentQuery createDeploymentQuery(DeploymentSpec spec) {
-        DeploymentQuery query = repositoryService.createDeploymentQuery();
+		return processDefinitionQuery.singleResult();
+	}
 
-        Function<ZonedDateTime, Instant> toInstant = ZonedDateTime::toInstant;
+	private Optional<Deployment> findDeployment(DeploymentSpec spec) {
+		return Optional.ofNullable(createDeploymentQuery(spec).singleResult());
+	}
 
-        add(query, DeploymentQuery::deploymentAfter, spec.getEarliestDeployment(), ZonedDateTime::toInstant);
+	private DeploymentQuery createDeploymentQuery(DeploymentSpec spec) {
+		DeploymentQuery query = repositoryService.createDeploymentQuery();
 
-        if(spec.getEarliestDeployment() != null ) {
-            query.deploymentAfter(Date.from(spec.getEarliestDeployment().toInstant()));
-        }
-        if(spec.getLatestDeployment() != null) {
-            query.deploymentBefore(Date.from(spec.getLatestDeployment().toInstant()));
-        }
-        if(spec.getSource() != null) {
-            query.deploymentSource(spec.getSource());
-        }
-        return query;
-    }
+		Function<ZonedDateTime, Date> toInstant = chain(ZonedDateTime::toInstant, Date::from);
+		add(query, DeploymentQuery::deploymentAfter, spec.getEarliestDeployment(), toInstant);
+		add(query, DeploymentQuery::deploymentBefore, spec.getLatestDeployment(), toInstant);
+		add(query, DeploymentQuery::deploymentSource, spec.getSource());
+		add(query, DeploymentQuery::deploymentName, spec.getName());
+		add(query, DeploymentQuery::tenantIdIn, spec.getTenantId(), s -> new String[]{s});
 
-    private void add(DeploymentQuery query, BiFunction<DeploymentQuery, Date, DeploymentQuery> setter,
-                     ZonedDateTime earliestDeployment, Function<ZonedDateTime, Instant> conversion) {
+		return query;
+	}
 
-    }
+	private <S> void add(DeploymentQuery query,
+						 BiFunction<DeploymentQuery, S, DeploymentQuery> setter,
+						 S specValue) {
+		add(query, setter, specValue, Function.identity());
+	}
 
+	private <S, Q> void add(DeploymentQuery query,
+							BiFunction<DeploymentQuery, Q, DeploymentQuery> setter,
+							S specValue,
+							Function<S, Q> conversion) {
+		if (specValue != null)
+			setter.apply(query, conversion.apply(specValue));
+	}
+
+	private <S> void add(ProcessDefinitionQuery query,
+						 BiFunction<ProcessDefinitionQuery, S, ProcessDefinitionQuery> setter,
+						 S specValue) {
+		add(query, setter, specValue, Function.identity());
+	}
+
+	private <S, Q> void add(ProcessDefinitionQuery query,
+							BiFunction<ProcessDefinitionQuery, Q, ProcessDefinitionQuery> setter,
+							S specValue,
+							Function<S, Q> conversion) {
+		if (specValue != null)
+			setter.apply(query, conversion.apply(specValue));
+	}
+
+	private <A, B, C> Function<A, C> chain(Function<A, B> f1, Function<B, C> f2) {
+		return f1.andThen(f2);
+	}
 
 }
