@@ -3,19 +3,22 @@
 camunda-bpm-migration is a framework for making process instance migration easier.
 It builds upon the migration functionality introduced in camunda BPM 7.5.
 
-Camunda already provides the ability to do a migration based on process definition mapping. 
+Camunda already provides the ability to do a migration based on process definition mapping.
 Still, the migration plans can only be defined for deployed processes. So it is hard to impossible to define a migration plan on a dev machine, test it on pre-productoin and then apply it to the live system.
- 
+
 We add stuff like
 * deployment independent migration plans
 * variable mapping
 
-## PAQ (Possibly Asked Questions)  
- 
-### Why are migration plans "stored" as Java code? 
+And maybe some day some fancy sh*t like
+* migrating only some instances, e.g. everything that is before that super-critical service task
+
+## PAQ (Possibly Asked Questions)
+
+### Why are migration plans "stored" as Java code?
 Each process implementation has its own specialties. When process instances are migrated, a lot of implementation details have to be considered.
 So, who is able to understand these details best? Who is able to provide a really good migration plan?
-Ah, right, the developer! 
+Ah, right, the developer!
 All developers that work with camunda speak one common language: Java
 Do I have to say more?
 
@@ -42,9 +45,9 @@ Put into another file if too big._
 
 ### Why "Barn Swallow"?
 1. Software is cooler, when it has a name.
-1. The Barn Swallow is also known as European Swallow and famous from the movie "Monty Python and the Holy Grail". 
+1. The Barn Swallow is also known as European Swallow and famous from the movie "Monty Python and the Holy Grail".
 1. The Barn Swallow is a _migratory_ bird. Maybe I should have put this first.
- 
+
 
 ## Maintainer
 
