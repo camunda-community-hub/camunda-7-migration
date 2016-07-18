@@ -23,7 +23,7 @@ public class ProcessDefinitionFinder {
 		this.repositoryService = repositoryService;
 	}
 
-	ProcessDefinition find(ProcessDefinitionSpec spec) {
+	public Optional<ProcessDefinition> find(ProcessDefinitionSpec spec) {
 		ProcessDefinitionQuery processDefinitionQuery = repositoryService.createProcessDefinitionQuery();
 
 		add(processDefinitionQuery, ProcessDefinitionQuery::processDefinitionKey, spec.getProcessDefinitionKey());
@@ -31,15 +31,15 @@ public class ProcessDefinitionFinder {
 		add(processDefinitionQuery, ProcessDefinitionQuery::processDefinitionVersion, spec.getProcessDefinitionVersion());
 
 		if (spec.getDeploymentSpec() != null) {
-			findDeployment(spec.getDeploymentSpec()).ifPresent(
-					deployment -> processDefinitionQuery.deploymentId(deployment.getId())
-			);
-			findDeployment(spec.getDeploymentSpec()).ifPresent(
-					deployment -> System.out.println("SRC " + deployment.getSource())
-			);
+			Optional<Deployment> deployment = findDeployment(spec.getDeploymentSpec());
+			if(!deployment.isPresent()) {
+				return Optional.empty();
+			} else {
+				add(processDefinitionQuery, ProcessDefinitionQuery::deploymentId, deployment.get(), Deployment::getId);
+			}
 		}
 
-		return processDefinitionQuery.singleResult();
+		return Optional.ofNullable(processDefinitionQuery.singleResult());
 	}
 
 	private Optional<Deployment> findDeployment(DeploymentSpec spec) {
