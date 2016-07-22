@@ -9,16 +9,16 @@ import java.util.function.BiFunction;
  */
 public class MappingStep implements MigrationStep {
 
-	private BiFunction<String, String, MigrationPlan> migrationPlan;
+	private BiFunction<String, String, MigrationPlan> migrationPlanFactory;
 
 	public MappingStep(BiFunction<String, String, MigrationPlan> camundaMigrationPlan) {
-		this.migrationPlan = camundaMigrationPlan;
+		this.migrationPlanFactory = camundaMigrationPlan;
 	}
 
 	@Override
 	public void perform(StepExecutionContext context) {
 		context.getProcessEngine().getRuntimeService()
-				.newMigration(migrationPlan.apply(context.getSourceProcessDefinitionId(), context.getTargetProcessDefinitionId()))
+				.newMigration(migrationPlanFactory.apply(context.getSourceProcessDefinitionId(), context.getTargetProcessDefinitionId()))
 				.processInstanceIds(context.getProcessInstanceIds())
 				.execute();
 	}
