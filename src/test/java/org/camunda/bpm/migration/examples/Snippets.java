@@ -5,12 +5,10 @@ import org.camunda.bpm.migration.plan.DeploymentSpec;
 import org.camunda.bpm.migration.plan.MigrationPlan;
 import org.camunda.bpm.migration.plan.ProcessDefinitionSpec;
 import org.camunda.bpm.migration.plan.step.MappingStep;
-import org.junit.Test;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.function.BiFunction;
-import java.util.function.Supplier;
 
 public class Snippets {
 
@@ -45,7 +43,9 @@ public class Snippets {
 	public void createMappingStep() {
 		RuntimeService runtimeService = null;
 
-		//The MigrationPlan checks the existence of the source and target ProcessDefinitions
+		//please note that this time we are(!) using Camunda's MigrationPlan
+		//The MigrationPlan.build() method checks the existence of the source and target ProcessDefinitions,
+		//that's why only a function for creation is provided and not the MigrationPlan itself
 		BiFunction<String, String, org.camunda.bpm.engine.migration.MigrationPlan> camundaMigrationPlan =
 				(source, target) -> runtimeService
 				.createMigrationPlan(source, target)
