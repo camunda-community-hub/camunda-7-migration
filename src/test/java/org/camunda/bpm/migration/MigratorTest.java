@@ -15,8 +15,8 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.RuleChain;
 import org.junit.runner.RunWith;
+import org.mockito.InOrder;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Collections;
@@ -28,6 +28,7 @@ import static org.camunda.bpm.migration.test.DummyProcessBuilder.build;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.inOrder;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MigratorTest {
@@ -78,10 +79,14 @@ public class MigratorTest {
 		migrationPlan.setSteps(Collections.singletonList(migrationStep));
 		migrator.migrate(migrationPlan);
 
-		Mockito.verify(migrationStep).perform(any(StepExecutionContext.class));
+		InOrder inOrder = inOrder(migrationStep);
+		inOrder.verify(migrationStep).prepare(any(StepExecutionContext.class));
+		inOrder.verify(migrationStep).perform(any(StepExecutionContext.class));
 
 		runtimeService().deleteProcessInstance(processInstanceId, null);
 	}
+
+	//TODO(malte.soerensen) test: if processInstanceIds is empty, fill all active ids of sourceDef
 
 	@Before
 	public void setup_stuff() {

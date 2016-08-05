@@ -42,7 +42,10 @@ public class Migrator {
 						.processInstanceId(processInstanceId)
 						.build())
 				.forEach(stepExecutionContext -> plan.getSteps()
-						.forEach(step -> step.perform(stepExecutionContext))
+						.forEach(step -> {
+							step.prepare(stepExecutionContext);
+							step.perform(stepExecutionContext);
+						})
 				);
 	}
 }
