@@ -1,6 +1,7 @@
 package org.camunda.bpm.migration.test;
 
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.Singular;
@@ -25,6 +26,7 @@ public class DummyProcessDeployer {
 	@Setter
 	private String source;
 
+	@Getter
 	private Deployment deployment;
 
 	public void deploy() {

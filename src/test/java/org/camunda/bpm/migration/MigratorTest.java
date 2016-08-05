@@ -1,16 +1,19 @@
 package org.camunda.bpm.migration;
 
+import org.camunda.bpm.engine.repository.ProcessDefinition;
+import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
 import org.camunda.bpm.migration.plan.MigrationPlan;
 import org.camunda.bpm.migration.plan.ProcessDefinitionSpec;
 import org.camunda.bpm.migration.plan.step.MigrationStep;
 import org.camunda.bpm.migration.plan.step.StepExecutionContext;
 import org.camunda.bpm.migration.test.DummyProcessDeployer;
-import org.junit.After;
+import org.camunda.bpm.migration.test.DummyProcessDeployerRule;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.rules.RuleChain;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -18,6 +21,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Collections;
 
+import static org.camunda.bpm.engine.test.assertions.bpmn.AbstractAssertions.processEngine;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.repositoryService;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.runtimeService;
 import static org.camunda.bpm.migration.test.DummyProcessBuilder.build;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.containsString;
@@ -33,7 +39,9 @@ public class MigratorTest {
 	private static final ProcessDefinitionSpec SPEC_V1 = ProcessDefinitionSpec.builder().processDefinitionKey(KEY).versionTag(V1).build();
 
 	@Rule
-	public ProcessEngineRule processEngineRule = new ProcessEngineRule();
+	public RuleChain ruleChain = RuleChain
+			.outerRule(new ProcessEngineRule())
+			.around(new DummyProcessDeployerRule(createDeployer(V1), createDeployer(V2)));
 
 	@Rule
 	public ExpectedException thrown = ExpectedException.none();
@@ -41,9 +49,6 @@ public class MigratorTest {
 	private Migrator migrator;
 
 	private MigrationPlan migrationPlan;
-
-	private DummyProcessDeployer deployer1;
-	private DummyProcessDeployer deployer2;
 
 	@Mock
 	private MigrationStep migrationStep;
@@ -68,18 +73,19 @@ public class MigratorTest {
 
 	@Test
 	public void applies_migration_steps() {
+		String processInstanceId = startInstance().getId();
+
 		migrationPlan.setSteps(Collections.singletonList(migrationStep));
 		migrator.migrate(migrationPlan);
 
 		Mockito.verify(migrationStep).perform(any(StepExecutionContext.class));
+
+		runtimeService().deleteProcessInstance(processInstanceId, null);
 	}
 
 	@Before
 	public void setup_stuff() {
-		migrator = new Migrator(processEngineRule.getProcessEngine());
-
-		deployer1 = deployDummyProcess(V1);
-		deployer2 = deployDummyProcess(V2);
+		migrator = new Migrator(processEngine());
 
 		migrationPlan = MigrationPlan.builder()
 				.from(SPEC_V1)
@@ -87,19 +93,14 @@ public class MigratorTest {
 				.build();
 	}
 
-	private DummyProcessDeployer deployDummyProcess(String version) {
-		DummyProcessDeployer deployer = DummyProcessDeployer.builder().repositoryService(processEngineRule.getRepositoryService())
+	private DummyProcessDeployer.DummyProcessDeployerBuilder createDeployer(String version) {
+		return DummyProcessDeployer.builder()
 				.source(getClass().getSimpleName())
-				.model(build(KEY, version))
-				.build();
-		deployer.deploy();
-		return deployer;
+				.model(build(KEY, version));
 	}
 
-	@After
-	public void undeploy() {
-		deployer1.undeploy();
-		deployer2.undeploy();
+	private ProcessInstance startInstance() {
+		ProcessDefinition processDefinition = repositoryService().createProcessDefinitionQuery().processDefinitionKey(KEY).versionTag(V1).singleResult();
+		return runtimeService().startProcessInstanceById(processDefinition.getId());
 	}
-
 }

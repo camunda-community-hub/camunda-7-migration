@@ -5,15 +5,16 @@ import org.camunda.bpm.engine.test.ProcessEngineRule;
 import org.camunda.bpm.migration.plan.DeploymentSpec;
 import org.camunda.bpm.migration.plan.ProcessDefinitionSpec;
 import org.camunda.bpm.migration.test.DummyProcessDeployer;
-import org.junit.After;
-import org.junit.Before;
+import org.camunda.bpm.migration.test.DummyProcessDeployerRule;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.RuleChain;
 
 import java.time.ZonedDateTime;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.repositoryService;
 import static org.camunda.bpm.migration.test.DummyProcessBuilder.build;
 
 public class ProcessDefinitionFinderTest {
@@ -24,29 +25,17 @@ public class ProcessDefinitionFinderTest {
 	private static final String TAG_V2 = "v2";
 	private static final String SOURCE_1 = "source1";
 	private static final String SOURCE_2 = "source2";
+	private static final DummyProcessDeployer.DummyProcessDeployerBuilder DEPLOYER_BUILDER = DummyProcessDeployer.builder()
+            .source(SOURCE_1)
+            .model(build(KEY_A, TAG_V1))
+            .model(build(KEY_B, TAG_V2));
 
 	@Rule
-	public ProcessEngineRule processEngineRule = new ProcessEngineRule();
+	public RuleChain ruleChain = RuleChain
+			.outerRule(new ProcessEngineRule())
+			.around(new DummyProcessDeployerRule(DEPLOYER_BUILDER));
 
-	private ProcessDefinitionFinder finder;
-
-	private DummyProcessDeployer deployer;
-
-	@Before
-	public void deploy() {
-		finder = new ProcessDefinitionFinder(processEngineRule.getRepositoryService());
-		deployer = DummyProcessDeployer.builder().repositoryService(processEngineRule.getRepositoryService())
-				.source(SOURCE_1)
-				.model(build(KEY_A, TAG_V1))
-				.model(build(KEY_B, TAG_V2))
-				.build();
-		deployer.deploy();
-	}
-
-	@After
-	public void undeploy() {
-		deployer.undeploy();
-	}
+	private ProcessDefinitionFinder finder = new ProcessDefinitionFinder(repositoryService());
 
 	@Test
 	public void find_by_processDefinitionKey() {
@@ -82,7 +71,7 @@ public class ProcessDefinitionFinderTest {
 					.build();
 
 			Optional<ProcessDefinition> processDefinition = finder.find(with(deploymentSpec));
-			assertThat(processDefinition.isPresent()).isTrue();
+			assertThat(processDefinition.isPresent()).overridingErrorMessage("ProcessDefinition not found for %s", deploymentSpec).isTrue();
 		});
 	}
 
@@ -115,7 +104,7 @@ public class ProcessDefinitionFinderTest {
 	}
 
 	private void runWithAnotherDeployment(Runnable testFunction) {
-		DummyProcessDeployer deployer2 = DummyProcessDeployer.builder().repositoryService(processEngineRule.getRepositoryService())
+		DummyProcessDeployer deployer2 = DummyProcessDeployer.builder().repositoryService(repositoryService())
 				.source(SOURCE_2)
 				.model(build(KEY_A, TAG_V2))
 				.build();
