@@ -1,18 +1,16 @@
 package org.camunda.bpm.migration;
 
+import lombok.extern.slf4j.Slf4j;
 import org.camunda.bpm.engine.ProcessEngine;
 import org.camunda.bpm.engine.repository.ProcessDefinition;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.migration.plan.MigrationPlan;
 import org.camunda.bpm.migration.plan.step.StepExecutionContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+@Slf4j
 public class Migrator {
-
-	private static final Logger LOG = LoggerFactory.getLogger(Migrator.class);
 
 	private ProcessEngine processEngine;
 
@@ -31,21 +29,19 @@ public class Migrator {
 
 		List<ProcessInstance> processInstances = processEngine.getRuntimeService().createProcessInstanceQuery()
 				.processDefinitionId(sourceProcessDefinition.getId()).active().list();
-		LOG.info("migrating {} process instance(s)", processInstances.size());
+		log.info("migrating {} process instance(s)", processInstances.size());
 		processInstances
 				.stream()
 				.map(ProcessInstance::getId)
-				.peek(processInstanceId -> LOG.info("migrating process instance ID {}", processInstanceId))
+				.peek(processInstanceId -> log.info("migrating process instance ID {}", processInstanceId))
 				.map(processInstanceId -> StepExecutionContext.builder().processEngine(processEngine)
 						.sourceProcessDefinitionId(sourceProcessDefinition.getId())
 						.targetProcessDefinitionId(targetProcessDefinition.getId())
 						.processInstanceId(processInstanceId)
 						.build())
-				.forEach(stepExecutionContext -> plan.getSteps()
-						.forEach(step -> {
-							step.prepare(stepExecutionContext);
-							step.perform(stepExecutionContext);
-						})
-				);
+				.forEach(stepExecutionContext -> {
+					plan.getSteps().forEach(step -> step.prepare(stepExecutionContext));
+					plan.getSteps().forEach(step -> step.perform(stepExecutionContext));
+				});
 	}
 }

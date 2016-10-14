@@ -4,7 +4,7 @@ import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.migration.plan.DeploymentSpec;
 import org.camunda.bpm.migration.plan.MigrationPlan;
 import org.camunda.bpm.migration.plan.ProcessDefinitionSpec;
-import org.camunda.bpm.migration.plan.step.MappingStep;
+import org.camunda.bpm.migration.plan.step.model.ModelStep;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -51,6 +51,6 @@ public class Snippets {
 				.createMigrationPlan(source, target)
 				.mapEqualActivities()
 				.build();
-		MappingStep mappingStep = new MappingStep(camundaMigrationPlan);
+		ModelStep mappingStep = new ModelStep(camundaMigrationPlan);
 	}
 }

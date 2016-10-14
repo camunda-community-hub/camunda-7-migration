@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.Singular;
-import org.camunda.bpm.migration.plan.step.MigrationStep;
+import org.camunda.bpm.migration.plan.step.Step;
 
 import java.util.List;
 
@@ -20,5 +20,5 @@ public class MigrationPlan {
 
 	@NonNull
 	@Singular
-	private List<MigrationStep> steps;
+	private List<Step> steps;
 }

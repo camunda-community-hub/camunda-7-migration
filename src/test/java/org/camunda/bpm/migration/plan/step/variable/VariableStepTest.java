@@ -1,7 +1,10 @@
-package org.camunda.bpm.migration.plan.step;
+package org.camunda.bpm.migration.plan.step.variable;
 
 import org.camunda.bpm.engine.variable.Variables;
 import org.camunda.bpm.engine.variable.value.TypedValue;
+import org.camunda.bpm.migration.plan.step.StepExecutionContext;
+import org.camunda.bpm.migration.plan.step.variable.strategy.ReadStrategy;
+import org.camunda.bpm.migration.plan.step.variable.strategy.WriteStrategy;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,7 +12,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Optional;
-import java.util.function.Function;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -27,10 +29,10 @@ public class VariableStepTest {
 	private StepExecutionContext stepExecutionContext;
 
 	@Mock
-	private VariableStepReadStrategy readStrategy;
+	private ReadStrategy readStrategy;
 
 	@Mock
-	private VariableStepWriteStrategy writeStrategy;
+	private WriteStrategy writeStrategy;
 
 	private VariableStep variableStep;
 
@@ -50,28 +52,39 @@ public class VariableStepTest {
 	}
 
 	@Test
-	public void converts_and_uses_value() {
+	public void uses_provided_conversion() {
+		//Given a variable with originalValue
 		TypedValue originalValue = prepareOriginalValue();
+		//And a conversion function that converts originalValue to convertedValue
 		TypedValue convertedValue = Variables.booleanValue(Boolean.TRUE);
 		@SuppressWarnings("unchecked")
-		Function<TypedValue, TypedValue> converter = mock(Function.class);
-		when(converter.apply(originalValue)).thenReturn(convertedValue);
-		variableStep.setConverter(converter);
+		Conversion conversion = mock(Conversion.class);
+		when(conversion.apply(originalValue)).thenReturn(convertedValue);
+		//And a variableStep with that conversion function
+		variableStep.setConversion(conversion);
 
+		//When performing the variable step
 		variableStep.perform(stepExecutionContext);
 
-		verify(converter).apply(originalValue);
+		//then the conversion function is called with the originalValue
+		verify(conversion).apply(originalValue);
+		//and the writerStrategy is called with the convertedValue
 		verify(writeStrategy).write(stepExecutionContext, VARIABLE, convertedValue);
 	}
 
 	@Test
 	public void renames_variable() {
+		//Given a variable VARIABLE
 		TypedValue originalValue = prepareOriginalValue();
+		//and a variableStep that renames VARIABLE to TARGET
 		variableStep.setTargetVariableName(TARGET);
 
+		//when performing the variableStep
 		variableStep.perform(stepExecutionContext);
 
+		//then variable TARGET is written
 		verify(writeStrategy).write(stepExecutionContext, TARGET, originalValue);
+		//and variable VARIABLE is deleted
 		verify(readStrategy).remove(stepExecutionContext, VARIABLE);
 	}
 

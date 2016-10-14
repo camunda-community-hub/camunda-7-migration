@@ -5,7 +5,7 @@ import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
 import org.camunda.bpm.migration.plan.MigrationPlan;
 import org.camunda.bpm.migration.plan.ProcessDefinitionSpec;
-import org.camunda.bpm.migration.plan.step.MigrationStep;
+import org.camunda.bpm.migration.plan.step.Step;
 import org.camunda.bpm.migration.plan.step.StepExecutionContext;
 import org.camunda.bpm.migration.test.DummyProcessDeployer;
 import org.camunda.bpm.migration.test.DummyProcessDeployerRule;
@@ -52,7 +52,7 @@ public class MigratorTest {
 	private MigrationPlan migrationPlan;
 
 	@Mock
-	private MigrationStep migrationStep;
+	private Step step;
 
 	@Test
 	public void exception_when_source_not_found() {
@@ -76,12 +76,12 @@ public class MigratorTest {
 	public void applies_migration_steps() {
 		String processInstanceId = startInstance().getId();
 
-		migrationPlan.setSteps(Collections.singletonList(migrationStep));
+		migrationPlan.setSteps(Collections.singletonList(step));
 		migrator.migrate(migrationPlan);
 
-		InOrder inOrder = inOrder(migrationStep);
-		inOrder.verify(migrationStep).prepare(any(StepExecutionContext.class));
-		inOrder.verify(migrationStep).perform(any(StepExecutionContext.class));
+		InOrder inOrder = inOrder(step);
+		inOrder.verify(step).prepare(any(StepExecutionContext.class));
+		inOrder.verify(step).perform(any(StepExecutionContext.class));
 
 		runtimeService().deleteProcessInstance(processInstanceId, null);
 	}

@@ -1,9 +1,11 @@
-package org.camunda.bpm.migration.plan.step;
+package org.camunda.bpm.migration.plan.step.model;
 
 import org.camunda.bpm.engine.ProcessEngine;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.migration.MigrationPlan;
 import org.camunda.bpm.engine.migration.MigrationPlanExecutionBuilder;
+import org.camunda.bpm.migration.plan.step.StepExecutionContext;
+import org.camunda.bpm.migration.plan.step.model.ModelStep;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +21,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class MappingStepTest {
+public class ModelStepTest {
 
 	private static final String SOURCE = "SOURCE";
 	private static final String TARGET = "TARGET";
@@ -39,7 +41,7 @@ public class MappingStepTest {
 	@Mock
 	private MigrationPlanExecutionBuilder builder;
 
-	private MappingStep mappingStep;
+	private ModelStep mappingStep;
 
 	@Test
 	public void create_migrationPlan() throws Exception {
@@ -59,7 +61,7 @@ public class MappingStepTest {
 
 	@Before
 	public void setUp() throws Exception {
-		mappingStep = new MappingStep(planFactory);
+		mappingStep = new ModelStep(planFactory);
 
 		ProcessEngine processEngine = mock(ProcessEngine.class);
 
