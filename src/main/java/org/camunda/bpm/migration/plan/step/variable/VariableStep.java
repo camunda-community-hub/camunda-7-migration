@@ -52,7 +52,6 @@ public class VariableStep implements Step {
 
 	@Override
 	public void perform(StepExecutionContext context) {
-		//TODO write value even if it's null?
 		originalTypedValue
 				.map(converter())
 				.ifPresent(

@@ -52,6 +52,15 @@ public class VariableStepTest {
 	}
 
 	@Test
+	public void writes_null_values() {
+		TypedValue originalValue = prepareOriginalValue(Variables.longValue(null));
+
+		variableStep.perform(stepExecutionContext);
+
+		verify(writeStrategy).write(stepExecutionContext, VARIABLE, originalValue);
+	}
+
+	@Test
 	public void uses_provided_conversion() {
 		//Given a variable with originalValue
 		TypedValue originalValue = prepareOriginalValue();
@@ -95,7 +104,10 @@ public class VariableStepTest {
 	}
 
 	private TypedValue prepareOriginalValue() {
-		TypedValue typedValue = Variables.stringValue("VALUE");
+		return prepareOriginalValue(Variables.stringValue("VALUE"));
+	}
+
+	private TypedValue prepareOriginalValue(TypedValue typedValue) {
 		when(readStrategy.read(any(),anyString())).thenReturn(Optional.of(typedValue));
 		variableStep.prepare(stepExecutionContext);
 		return typedValue;
