@@ -1,10 +1,16 @@
 package org.camunda.bpm.migration.examples;
 
 import org.camunda.bpm.engine.RuntimeService;
+import org.camunda.bpm.engine.variable.Variables;
+import org.camunda.bpm.engine.variable.value.TypedValue;
 import org.camunda.bpm.migration.plan.DeploymentSpec;
 import org.camunda.bpm.migration.plan.MigrationPlan;
 import org.camunda.bpm.migration.plan.ProcessDefinitionSpec;
 import org.camunda.bpm.migration.plan.step.model.ModelStep;
+import org.camunda.bpm.migration.plan.step.variable.Conversion;
+import org.camunda.bpm.migration.plan.step.variable.VariableStep;
+import org.camunda.bpm.migration.plan.step.variable.strategy.ReadStrategy;
+import org.camunda.bpm.migration.plan.step.variable.strategy.WriteStrategy;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -52,5 +58,37 @@ public class Snippets {
 				.mapEqualActivities()
 				.build();
 		ModelStep mappingStep = new ModelStep(camundaMigrationPlan);
+	}
+
+	public void createVariableStep() {
+		ReadStrategy readStrategy = null;
+		WriteStrategy writeStrategy = null;
+		String sourceVariableName = null;
+
+		VariableStep variableStep = new VariableStep(readStrategy, writeStrategy, sourceVariableName);
+	}
+
+	public void renameVariable() {
+		ReadStrategy readStrategy = null;
+		WriteStrategy writeStrategy = null;
+		String sourceVariableName = null;
+		String targetVariableName = null;
+
+		VariableStep variableStep = new VariableStep(readStrategy, writeStrategy, sourceVariableName);
+		variableStep.setTargetVariableName(targetVariableName);
+	}
+
+	public void changeVariableType() {
+		ReadStrategy readStrategy = null;
+		WriteStrategy writeStrategy = null;
+		String sourceVariableName = null;
+
+		Conversion conversionFunction = (TypedValue originalTypedValue) -> {
+			String invoiceNumberWithoutDelimiters = originalTypedValue.getValue().toString().replace("-", "");
+			return Variables.longValue(Long.valueOf(invoiceNumberWithoutDelimiters));
+		};
+
+		VariableStep variableStep = new VariableStep(readStrategy, writeStrategy, sourceVariableName);
+		variableStep.setConversion(conversionFunction);
 	}
 }

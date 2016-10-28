@@ -53,4 +53,60 @@ ProcessDefinitionSpec byDefinitionKeyAndDeploymentDate = ProcessDefinitionSpec.b
 		.processDefinitionKey("myProcess")
 		.deploymentSpec(year2015)
 		.build();
+```
+
+## Creating a Variable Step
+
+Variables are automatically transferred 1:1 by Camunda's MigrationPlan.
+ This step is used for changing names, values or types of variables and
+ for moving variables from process level to task level and vice versa.
+
+The Variable Step uses three parameters that define the actual behaviour:
+
+- `sourceVariableName`: the name of the source variable. Equals the target name, unless the variable shall be renamed. (see below for renaming)
+- `readStrategy`: defines where to read the variable from. Predefined strategies are
+  - `ReadProcessVariable`
+  - `ReadTaskVariable`
+- `writeStrategy`: defines where to write the variable to. Predefined strategies are
+  - `WriteProcessVariable`
+  - `WriteTaskVariable`
+
 ```java
+VariableStep variableStep = new VariableStep(readStrategy, writeStrategy, sourceVariableName);
+```
+
+### Renaming a Variable
+
+For renaming a process variable, use any read and write strategy you like
+and set the `VariableStep`'s `targetVariableName` property:
+
+ ```java
+VariableStep variableStep = new VariableStep(readStrategy, writeStrategy, sourceVariableName);
+variableStep.setTargetVariableName(targetVariableName);
+```
+
+### Changing a Variable's Type or Value
+
+Changing a variable type or value requires a conversion function to be provided
+via the `VariableStep`'s `conversion` property:
+
+ ```java
+VariableStep variableStep = new VariableStep(readStrategy, writeStrategy, sourceVariableName);
+variableStep.setConversion(conversion);
+```
+
+The conversion function itself is an instance of the the `Conversion`
+interface which in turn is a `UnaryOperator<TypedValue>`.
+As the conversion works on Camunda's `TypedValue`s, one can easily change
+the value and the type in one step.
+
+A (much too verbose :wink: ) example for converting a "123-456-789" formatted invoice number string into a 123456789 long.
+```java
+Conversion conversionFunction = (TypedValue originalTypedValue) -> {
+	String invoiceNumberWithoutDelimiters = originalTypedValue.getValue().toString().replace("-", "");
+	return Variables.longValue(Long.valueOf(invoiceNumberWithoutDelimiters));
+};
+```
+
+N.B.: It is guaranteed that the `TypedValue` argument is not null. The value's value may be null, though.
+
