@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/holisticon/camunda-bpm-migration.svg?branch=develop)](https://travis-ci.org/holisticon/camunda-bpm-migration)
+
 # camunda-bpm-migration
 
 camunda-bpm-migration is a framework for making process instance migration easier.
