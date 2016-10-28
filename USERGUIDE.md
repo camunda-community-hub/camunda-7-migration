@@ -48,11 +48,11 @@ ProcessDefinitionSpec byDefinitionKeyAndDeploymentDate = ProcessDefinitionSpec.b
 //please note that this time we are(!) using Camunda's MigrationPlan
 //The MigrationPlan.build() method checks the existence of the source and target ProcessDefinitions,
 //that's why only a function for creation is provided and not the MigrationPlan itself
-BiFunction<String, String, org.camunda.bpm.engine.migration.MigrationPlan> camundaMigrationPlan =
+MigrationPlanFactory camundaMigrationPlan =
 		(source, target) -> runtimeService
 		.createMigrationPlan(source, target)
 		.mapEqualActivities()
-		.build();
+		.build(); //could fail on startup!
 MappingStep mappingStep = new MappingStep(camundaMigrationPlan);
 ```
 
@@ -115,21 +115,10 @@ N.B.: It is guaranteed that the `TypedValue` argument is not null. The value's v
 
 Nothing simpler than this! :)
 
-Create a custom `ReadStrategy` that returns a `TypedValue` of your choice. No further settings are required.
+Create a `ReadConstantValue` that returns a `TypedValue` of your choice. No further settings are required.
 
 ```java
-ReadStrategy constantValue = new ReadStrategy() {
-	@Override
-	public Optional<TypedValue> read(StepExecutionContext stepExecutionContext, String variableName) {
-		return Optional.of(Variables.integerValue(42));
-	}
-
-	@Override
-	public void remove(StepExecutionContext stepExecutionContext, String variableName) {
-		//empty
-	}
-};
-
+ReadStrategy constantValue = new ReadConstantValue(Variables.integerValue(42));
 WriteStrategy writeStrategy = new WriteProcessVariable();
 
 VariableStep variableStep = new VariableStep(constantValue, writeStrategy, "theAnswer");
@@ -137,7 +126,7 @@ VariableStep variableStep = new VariableStep(constantValue, writeStrategy, "theA
 
 ### Removing a Variable
 
-Use a `VariableDeleteStep` with an approriate `ReadStrategy`.
+Use a `VariableDeleteStep` with an appropriate `ReadStrategy`.
 Set the step's `variableName` property to the name of the variable that shall be deleted.
 
 ```java
