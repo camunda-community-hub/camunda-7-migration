@@ -5,15 +5,12 @@ import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.migration.MigrationPlan;
 import org.camunda.bpm.engine.migration.MigrationPlanExecutionBuilder;
 import org.camunda.bpm.migration.plan.step.StepExecutionContext;
-import org.camunda.bpm.migration.plan.step.model.ModelStep;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import java.util.function.BiFunction;
 
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.mock;
@@ -73,7 +70,7 @@ public class ModelStepTest {
 		when(builder.processInstanceIds(anyList())).thenReturn(builder);
 	}
 
-	private class MigrationPlanFactory implements BiFunction<String, String, MigrationPlan> {
+	private class MigrationPlanFactory implements org.camunda.bpm.migration.plan.step.model.MigrationPlanFactory {
 		@Override
 		public MigrationPlan apply(String s, String s2) {
 			return migrationPlan;

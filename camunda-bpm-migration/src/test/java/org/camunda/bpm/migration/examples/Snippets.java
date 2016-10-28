@@ -6,19 +6,18 @@ import org.camunda.bpm.engine.variable.value.TypedValue;
 import org.camunda.bpm.migration.plan.DeploymentSpec;
 import org.camunda.bpm.migration.plan.MigrationPlan;
 import org.camunda.bpm.migration.plan.ProcessDefinitionSpec;
-import org.camunda.bpm.migration.plan.step.StepExecutionContext;
+import org.camunda.bpm.migration.plan.step.model.MigrationPlanFactory;
 import org.camunda.bpm.migration.plan.step.model.ModelStep;
 import org.camunda.bpm.migration.plan.step.variable.Conversion;
 import org.camunda.bpm.migration.plan.step.variable.VariableDeleteStep;
 import org.camunda.bpm.migration.plan.step.variable.VariableStep;
+import org.camunda.bpm.migration.plan.step.variable.strategy.ReadConstantValue;
 import org.camunda.bpm.migration.plan.step.variable.strategy.ReadStrategy;
 import org.camunda.bpm.migration.plan.step.variable.strategy.WriteProcessVariable;
 import org.camunda.bpm.migration.plan.step.variable.strategy.WriteStrategy;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Optional;
-import java.util.function.BiFunction;
 
 public class Snippets {
 
@@ -56,11 +55,11 @@ public class Snippets {
 		//please note that this time we are(!) using Camunda's MigrationPlan
 		//The MigrationPlan.build() method checks the existence of the source and target ProcessDefinitions,
 		//that's why only a function for creation is provided and not the MigrationPlan itself
-		BiFunction<String, String, org.camunda.bpm.engine.migration.MigrationPlan> camundaMigrationPlan =
+		MigrationPlanFactory camundaMigrationPlan =
 				(source, target) -> runtimeService
 				.createMigrationPlan(source, target)
 				.mapEqualActivities()
-				.build();
+				.build();  //could fail on startup!
 		ModelStep mappingStep = new ModelStep(camundaMigrationPlan);
 	}
 
@@ -97,18 +96,7 @@ public class Snippets {
 	}
 
 	public void createNewVariable() {
-		ReadStrategy constantValue = new ReadStrategy() {
-			@Override
-			public Optional<TypedValue> read(StepExecutionContext stepExecutionContext, String variableName) {
-				return Optional.of(Variables.integerValue(42));
-			}
-
-			@Override
-			public void remove(StepExecutionContext stepExecutionContext, String variableName) {
-				//empty
-			}
-		};
-
+		ReadStrategy constantValue = new ReadConstantValue(Variables.integerValue(42));
 		WriteStrategy writeStrategy = new WriteProcessVariable();
 
 		VariableStep variableStep = new VariableStep(constantValue, writeStrategy, "theAnswer");
