@@ -6,20 +6,28 @@
     <artifactId>camunda-bpm-migration-parent</artifactId>
 	<packaging>pom</packaging>
 	<version>1.0.0-SNAPSHOT</version>
+
+	<!-- use camunda-release-parent for releasing to maven central and camunda nexus -->
+	<parent>
+		<groupId>org.camunda</groupId>
+		<artifactId>camunda-release-parent</artifactId>
+		<version>2.5</version>
+		<relativePath />
+	</parent>
+
 	<modules>
 		<module>camunda-bpm-migration-examples</module>
 		<module>camunda-bpm-migration</module>
 	</modules>
 
-    <!-- use camunda-release-parent for releasing to maven central and camunda nexus -->
-    <parent>
-        <groupId>org.camunda</groupId>
-        <artifactId>camunda-release-parent</artifactId>
-        <version>2.5</version>
-        <relativePath />
-    </parent>
+	<properties>
+		<camunda.version>7.5.0</camunda.version>
+		<slf4j.version>1.7.16</slf4j.version>
+		<version.java>1.8</version.java>
+		<java.version>${version.java}</java.version>
+	</properties>
 
-    <!-- uncomment to add custom repositores if you need some
+	<!-- uncomment to add custom repositores if you need some
     <repositories>
         <repository>
             <id>camunda-bpm-nexus</id>
@@ -54,11 +62,6 @@
     </repositories>
     -->
 
-    <properties>
-        <camunda.version>7.5.0</camunda.version>
-		<slf4j.version>1.7.16</slf4j.version>
-    </properties>
-
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -71,19 +74,19 @@
         </dependencies>
     </dependencyManagement>
 
-    <build>
-        <defaultGoal>clean install</defaultGoal>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+    <!--<build>-->
+        <!--<defaultGoal>clean install</defaultGoal>-->
+        <!--<plugins>-->
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-compiler-plugin</artifactId>-->
+                <!--<configuration>-->
+                    <!--<source>1.8</source>-->
+                    <!--<target>1.8</target>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
+        <!--</plugins>-->
+    <!--</build>-->
 
     <!-- change to your license -->
     <licenses>
