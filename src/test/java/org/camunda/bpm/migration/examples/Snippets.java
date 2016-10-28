@@ -116,7 +116,7 @@ public class Snippets {
 
 	public void deleteVariable() {
 		ReadStrategy readStrategy = null;
-		String variableName;
+		String variableName = null;
 
 		VariableDeleteStep variableDeleteStep = new VariableDeleteStep(readStrategy, variableName);
 	}

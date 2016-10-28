@@ -9,9 +9,5 @@ import java.util.function.UnaryOperator;
  */
 public interface Conversion extends UnaryOperator<TypedValue> {
 
-	/**
-	 * Convenience shortcut to {@link UnaryOperator#identity()}
-	 */
-	Conversion ID = (Conversion) UnaryOperator.<TypedValue>identity();
-
+	Conversion ID = value -> value;
 }
