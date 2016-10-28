@@ -110,3 +110,26 @@ Conversion conversionFunction = (TypedValue originalTypedValue) -> {
 
 N.B.: It is guaranteed that the `TypedValue` argument is not null. The value's value may be null, though.
 
+### Creating a New Variable
+
+Nothing simpler than this! :)
+
+Create a custom `ReadStrategy` that returns a `TypedValue` of your choice. No further settings are required.
+
+```
+ReadStrategy constantValue = new ReadStrategy() {
+	@Override
+	public Optional<TypedValue> read(StepExecutionContext stepExecutionContext, String variableName) {
+		return Optional.of(Variables.integerValue(42));
+	}
+
+	@Override
+	public void remove(StepExecutionContext stepExecutionContext, String variableName) {
+		//empty
+	}
+};
+
+WriteStrategy writeStrategy = new WriteProcessVariable();
+
+VariableStep variableStep = new VariableStep(constantValue, writeStrategy, "theAnswer");
+´´´
