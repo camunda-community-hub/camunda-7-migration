@@ -8,6 +8,9 @@ import org.camunda.bpm.migration.plan.step.StepExecutionContext;
 
 import java.util.Optional;
 
+/**
+ * A {@link ReadStrategy} that reads a task variable. The task is identified by its TaskDefinitionKey.
+ */
 @RequiredArgsConstructor
 @Slf4j
 public class ReadTaskVariable extends AbstractReadWriteStrategy implements ReadStrategy {

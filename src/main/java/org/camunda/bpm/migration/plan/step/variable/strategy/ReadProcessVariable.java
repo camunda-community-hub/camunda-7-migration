@@ -6,6 +6,9 @@ import org.camunda.bpm.migration.plan.step.StepExecutionContext;
 
 import java.util.Optional;
 
+/**
+ * A {@link ReadStrategy} that reads a process variable.
+ */
 @Slf4j
 public class ReadProcessVariable extends AbstractReadWriteStrategy implements ReadStrategy {
 

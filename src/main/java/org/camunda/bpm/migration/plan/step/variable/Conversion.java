@@ -4,7 +4,14 @@ import org.camunda.bpm.engine.variable.value.TypedValue;
 
 import java.util.function.UnaryOperator;
 
+/**
+ * Defines how a variable's type and value are converted.
+ */
 public interface Conversion extends UnaryOperator<TypedValue> {
 
-	Conversion ID = value -> value;
+	/**
+	 * Convenience shortcut to {@link UnaryOperator#identity()}
+	 */
+	Conversion ID = (Conversion) UnaryOperator.<TypedValue>identity();
+
 }
