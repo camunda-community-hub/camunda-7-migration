@@ -9,6 +9,7 @@ import org.camunda.bpm.migration.plan.ProcessDefinitionSpec;
 import org.camunda.bpm.migration.plan.step.StepExecutionContext;
 import org.camunda.bpm.migration.plan.step.model.ModelStep;
 import org.camunda.bpm.migration.plan.step.variable.Conversion;
+import org.camunda.bpm.migration.plan.step.variable.VariableDeleteStep;
 import org.camunda.bpm.migration.plan.step.variable.VariableStep;
 import org.camunda.bpm.migration.plan.step.variable.strategy.ReadStrategy;
 import org.camunda.bpm.migration.plan.step.variable.strategy.WriteProcessVariable;
@@ -96,7 +97,6 @@ public class Snippets {
 	}
 
 	public void createNewVariable() {
-
 		ReadStrategy constantValue = new ReadStrategy() {
 			@Override
 			public Optional<TypedValue> read(StepExecutionContext stepExecutionContext, String variableName) {
@@ -112,5 +112,12 @@ public class Snippets {
 		WriteStrategy writeStrategy = new WriteProcessVariable();
 
 		VariableStep variableStep = new VariableStep(constantValue, writeStrategy, "theAnswer");
+	}
+
+	public void deleteVariable() {
+		ReadStrategy readStrategy = null;
+		String variableName;
+
+		VariableDeleteStep variableDeleteStep = new VariableDeleteStep(readStrategy, variableName);
 	}
 }

@@ -13,21 +13,8 @@ import org.camunda.bpm.migration.plan.MigrationPlan;
 MigrationPlan.builder()
 		.from(source).to(destination)
 		.step(migrationStep)
+		/// add more steps in desired order ...
 		.build();
-```
-
-## Creating a Camunda Mapping Step
-
-```java
-//please note that this time we are(!) using Camunda's MigrationPlan
-//The MigrationPlan.build() method checks the existence of the source and target ProcessDefinitions,
-//that's why only a function for creation is provided and not the MigrationPlan itself
-BiFunction<String, String, org.camunda.bpm.engine.migration.MigrationPlan> camundaMigrationPlan =
-		(source, target) -> runtimeService
-		.createMigrationPlan(source, target)
-		.mapEqualActivities()
-		.build();
-MappingStep mappingStep = new MappingStep(camundaMigrationPlan);
 ```
 
 ## Specifying Process Definitions
@@ -53,6 +40,20 @@ ProcessDefinitionSpec byDefinitionKeyAndDeploymentDate = ProcessDefinitionSpec.b
 		.processDefinitionKey("myProcess")
 		.deploymentSpec(year2015)
 		.build();
+```
+
+## Creating a Camunda Mapping Step
+
+```java
+//please note that this time we are(!) using Camunda's MigrationPlan
+//The MigrationPlan.build() method checks the existence of the source and target ProcessDefinitions,
+//that's why only a function for creation is provided and not the MigrationPlan itself
+BiFunction<String, String, org.camunda.bpm.engine.migration.MigrationPlan> camundaMigrationPlan =
+		(source, target) -> runtimeService
+		.createMigrationPlan(source, target)
+		.mapEqualActivities()
+		.build();
+MappingStep mappingStep = new MappingStep(camundaMigrationPlan);
 ```
 
 ## Creating a Variable Step
@@ -116,7 +117,7 @@ Nothing simpler than this! :)
 
 Create a custom `ReadStrategy` that returns a `TypedValue` of your choice. No further settings are required.
 
-```
+```java
 ReadStrategy constantValue = new ReadStrategy() {
 	@Override
 	public Optional<TypedValue> read(StepExecutionContext stepExecutionContext, String variableName) {
@@ -132,4 +133,13 @@ ReadStrategy constantValue = new ReadStrategy() {
 WriteStrategy writeStrategy = new WriteProcessVariable();
 
 VariableStep variableStep = new VariableStep(constantValue, writeStrategy, "theAnswer");
-´´´
+```
+
+### Removing a Variable
+
+Use a `VariableDeleteStep` with an approriate `ReadStrategy`.
+Set the step's `variableName` property to the name of the variable that shall be deleted.
+
+```java
+VariableDeleteStep variableDeleteStep = new VariableDeleteStep(readStrategy, variableName);
+```
