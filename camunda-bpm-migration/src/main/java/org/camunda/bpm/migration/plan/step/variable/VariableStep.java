@@ -24,6 +24,7 @@ import java.util.Optional;
  * Source and target variable are determined by a {@link ReadStrategy} and a {@link WriteStrategy}.
  * The transformation is performed by a
  */
+//@Builder
 @RequiredArgsConstructor
 public class VariableStep implements Step {
 
@@ -44,6 +45,28 @@ public class VariableStep implements Step {
 
 	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 	private Optional<TypedValue> originalTypedValue;
+
+	public VariableStep(ReadStrategy readStrategy, WriteStrategy writeStrategy, String sourceVariableName, String targetVariableName) {
+		this.readStrategy = readStrategy;
+		this.writeStrategy = writeStrategy;
+		this.sourceVariableName = sourceVariableName;
+		this.targetVariableName = targetVariableName;
+	}
+
+	public VariableStep(ReadStrategy readStrategy, WriteStrategy writeStrategy, String sourceVariableName, Conversion conversion) {
+		this.readStrategy = readStrategy;
+		this.writeStrategy = writeStrategy;
+		this.sourceVariableName = sourceVariableName;
+		this.conversion = conversion;
+	}
+
+	public VariableStep(ReadStrategy readStrategy, WriteStrategy writeStrategy, String sourceVariableName, String targetVariableName, Conversion conversion) {
+		this.readStrategy = readStrategy;
+		this.writeStrategy = writeStrategy;
+		this.sourceVariableName = sourceVariableName;
+		this.targetVariableName = targetVariableName;
+		this.conversion = conversion;
+	}
 
 	@Override
 	public void prepare(StepExecutionContext context) {

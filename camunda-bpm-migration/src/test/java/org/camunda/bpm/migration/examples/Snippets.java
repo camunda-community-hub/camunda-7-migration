@@ -34,7 +34,6 @@ public class Snippets {
 				.processDefinitionKey("myProcess")
 				.versionTag("1")
 				.build();
-
 	}
 
 	public void specByDefinitionKeyAndDeploymentDate() {
@@ -77,8 +76,9 @@ public class Snippets {
 		String sourceVariableName = null;
 		String targetVariableName = null;
 
-		VariableStep variableStep = new VariableStep(readStrategy, writeStrategy, sourceVariableName);
-		variableStep.setTargetVariableName(targetVariableName);
+		VariableStep variableStep = new VariableStep(
+				readStrategy, writeStrategy,
+				sourceVariableName, targetVariableName);
 	}
 
 	public void changeVariableType() {
@@ -91,8 +91,9 @@ public class Snippets {
 			return Variables.longValue(Long.valueOf(invoiceNumberWithoutDelimiters));
 		};
 
-		VariableStep variableStep = new VariableStep(readStrategy, writeStrategy, sourceVariableName);
-		variableStep.setConversion(conversionFunction);
+		VariableStep variableStep = new VariableStep(
+				readStrategy, writeStrategy,
+				sourceVariableName, conversionFunction);
 	}
 
 	public void createNewVariable() {

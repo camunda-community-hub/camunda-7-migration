@@ -82,8 +82,9 @@ For renaming a process variable, use any read and write strategy you like
 and set the `VariableStep`'s `targetVariableName` property:
 
  ```java
-VariableStep variableStep = new VariableStep(readStrategy, writeStrategy, sourceVariableName);
-variableStep.setTargetVariableName(targetVariableName);
+VariableStep variableStep = new VariableStep(
+		readStrategy, writeStrategy, 
+		sourceVariableName, targetVariableName);
 ```
 
 ### Changing a Variable's Type or Value
@@ -92,8 +93,9 @@ Changing a variable type or value requires a conversion function to be provided
 via the `VariableStep`'s `conversion` property:
 
  ```java
-VariableStep variableStep = new VariableStep(readStrategy, writeStrategy, sourceVariableName);
-variableStep.setConversion(conversion);
+VariableStep variableStep = new VariableStep(
+		readStrategy, writeStrategy,
+		sourceVariableName, conversionFunction);
 ```
 
 The conversion function itself is an instance of the the `Conversion`

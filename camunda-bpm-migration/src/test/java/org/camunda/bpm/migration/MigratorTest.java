@@ -15,15 +15,22 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.RuleChain;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Collections;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.camunda.bpm.engine.test.assertions.bpmn.AbstractAssertions.processEngine;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareAssertions.assertThat;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.complete;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.repositoryService;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.runtimeService;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.task;
 import static org.camunda.bpm.migration.test.DummyProcessBuilder.build;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.containsString;
@@ -50,6 +57,9 @@ public class MigratorTest {
 	private Migrator migrator;
 
 	private MigrationPlan migrationPlan;
+
+	@Captor
+	private ArgumentCaptor<StepExecutionContext> stepExecutionContextCaptor;
 
 	@Mock
 	private Step step;
@@ -82,11 +92,41 @@ public class MigratorTest {
 		InOrder inOrder = inOrder(step);
 		inOrder.verify(step).prepare(any(StepExecutionContext.class));
 		inOrder.verify(step).perform(any(StepExecutionContext.class));
-
-		runtimeService().deleteProcessInstance(processInstanceId, null);
 	}
 
-	//TODO(malte.soerensen) test: if processInstanceIds is empty, fill all active ids of sourceDef
+	@Test
+	public void migrates_active_instances_only() {
+		final String completedProcessInstanceId;
+		{
+			ProcessInstance processInstance = startInstance();
+			complete(task(processInstance));
+			assertThat(processInstance).isEnded();
+			completedProcessInstanceId = processInstance.getId();
+		}
+
+		String processInstanceId = startInstance().getId();
+
+		migrationPlan.setSteps(Collections.singletonList(step));
+		migrator.migrate(migrationPlan);
+
+		InOrder inOrder = inOrder(step);
+		inOrder.verify(step).prepare(stepExecutionContextCaptor.capture());
+		inOrder.verify(step).perform(stepExecutionContextCaptor.capture());
+		inOrder.verifyNoMoreInteractions();
+
+		Set<String> processInstanceIds = stepExecutionContextCaptor.getAllValues().stream()
+				.map(StepExecutionContext::getProcessInstanceId)
+				.collect(Collectors.toSet());
+		assertThat(processInstanceIds).hasSize(1).contains(processInstanceId);
+	}
+
+	@Test
+	public void uses_all_() {
+		String processInstanceId = startInstance().getId();
+
+		migrationPlan.setSteps(Collections.singletonList(step));
+		migrator.migrate(migrationPlan);
+	}
 
 	@Before
 	public void setup_stuff() {
