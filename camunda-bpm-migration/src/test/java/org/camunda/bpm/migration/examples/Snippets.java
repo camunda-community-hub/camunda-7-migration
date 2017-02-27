@@ -67,11 +67,15 @@ public class Snippets {
 		ReadStrategy readStrategy = null;
 		WriteStrategy writeStrategy = null;
 		String sourceVariableName = null;
+		String targetVariableName = null;
+		Conversion conversion = null;
 
 		VariableStep variableStep = VariableStep.builder()
 				.readStrategy(readStrategy)
 				.writeStrategy(writeStrategy)
 				.sourceVariableName(sourceVariableName)
+				.targetVariableName(targetVariableName)
+				.conversion(conversion)
 				.build();
 	}
 

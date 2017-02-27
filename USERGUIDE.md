@@ -62,18 +62,26 @@ Variables are automatically transferred 1:1 by Camunda's MigrationPlan.
  This step is used for changing names, values or types of variables and
  for moving variables from process level to task level and vice versa.
 
-The Variable Step uses three parameters that define the actual behaviour:
+The Variable Step uses five parameters that define the actual behaviour:
 
-- `sourceVariableName`: the name of the source variable. Equals the target name, unless the variable shall be renamed. (see below for renaming)
+- `sourceVariableName`: the name of the variable to read from.
+- `targetVariableName`: (optional) the name of the variable to write to. If not set, equals the source name.
 - `readStrategy`: defines where to read the variable from. Predefined strategies are
   - `ReadProcessVariable`
   - `ReadTaskVariable`
 - `writeStrategy`: defines where to write the variable to. Predefined strategies are
   - `WriteProcessVariable`
   - `WriteTaskVariable`
+- `conversion`: a conversion function for the variable's type or value. 
 
 ```java
-VariableStep variableStep = new VariableStep(readStrategy, writeStrategy, sourceVariableName);
+VariableStep variableStep = VariableStep.builder()
+		.readStrategy(readStrategy)
+		.writeStrategy(writeStrategy)
+		.sourceVariableName(sourceVariableName)
+		.targetVariableName(targetVariableName)
+		.conversion(conversion)
+		.build();
 ```
 
 ### Renaming a Variable
@@ -82,9 +90,12 @@ For renaming a process variable, use any read and write strategy you like
 and set the `VariableStep`'s `targetVariableName` property:
 
  ```java
-VariableStep variableStep = new VariableStep(
-		readStrategy, writeStrategy, 
-		sourceVariableName, targetVariableName);
+VariableStep variableStep = VariableStep.builder()
+		.readStrategy(readStrategy)
+		.writeStrategy(writeStrategy)
+		.sourceVariableName(sourceVariableName)
+		.targetVariableName(targetVariableName)
+		.build();
 ```
 
 ### Changing a Variable's Type or Value
@@ -93,9 +104,12 @@ Changing a variable type or value requires a conversion function to be provided
 via the `VariableStep`'s `conversion` property:
 
  ```java
-VariableStep variableStep = new VariableStep(
-		readStrategy, writeStrategy,
-		sourceVariableName, conversionFunction);
+VariableStep variableStep = VariableStep.builder()
+		.readStrategy(readStrategy)
+		.writeStrategy(writeStrategy)
+		.sourceVariableName(sourceVariableName)
+		.conversion(conversionFunction)
+		.build();
 ```
 
 The conversion function itself is an instance of the the `Conversion`
@@ -123,7 +137,11 @@ Create a `ReadConstantValue` that returns a `TypedValue` of your choice. No furt
 ReadStrategy constantValue = new ReadConstantValue(Variables.integerValue(42));
 WriteStrategy writeStrategy = new WriteProcessVariable();
 
-VariableStep variableStep = new VariableStep(constantValue, writeStrategy, "theAnswer");
+VariableStep variableStep = VariableStep.builder()
+		.readStrategy(constantValue)
+		.writeStrategy(writeStrategy)
+		.sourceVariableName("theAnswer")
+		.build();
 ```
 
 ### Removing a Variable
@@ -132,5 +150,8 @@ Use a `VariableDeleteStep` with an appropriate `ReadStrategy`.
 Set the step's `variableName` property to the name of the variable that shall be deleted.
 
 ```java
-VariableDeleteStep variableDeleteStep = new VariableDeleteStep(readStrategy, variableName);
+VariableDeleteStep variableDeleteStep = VariableDeleteStep.builder()
+		.deleteStrategy(deleteStrategy)
+		.variableName(variableName)
+		.build();
 ```
