@@ -99,7 +99,11 @@ public class VariableStepTest {
 
 	@Before
 	public void setUp() throws Exception {
-		variableStep = new VariableStep(readStrategy, writeStrategy, VARIABLE);
+		variableStep = VariableStep.builder()
+				.readStrategy(readStrategy)
+				.writeStrategy(writeStrategy)
+				.sourceVariableName(VARIABLE)
+				.build();
 		when(readStrategy.read(any(), anyString())).thenReturn(Optional.empty());
 	}
 
@@ -108,7 +112,7 @@ public class VariableStepTest {
 	}
 
 	private TypedValue prepareOriginalValue(TypedValue typedValue) {
-		when(readStrategy.read(any(),anyString())).thenReturn(Optional.of(typedValue));
+		when(readStrategy.read(any(), anyString())).thenReturn(Optional.of(typedValue));
 		variableStep.prepare(stepExecutionContext);
 		return typedValue;
 	}

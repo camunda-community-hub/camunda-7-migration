@@ -1,8 +1,8 @@
 package org.camunda.bpm.migration.plan.step.variable;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.camunda.bpm.engine.variable.value.TypedValue;
 import org.camunda.bpm.migration.plan.step.Step;
@@ -22,10 +22,8 @@ import java.util.Optional;
  * Then applies a transformation and writes the result in its {@link #perform(StepExecutionContext)} method.
  * <p>
  * Source and target variable are determined by a {@link ReadStrategy} and a {@link WriteStrategy}.
- * The transformation is performed by a
+ * The transformation is performed by a {@link Conversion}
  */
-//@Builder
-@RequiredArgsConstructor
 public class VariableStep implements Step {
 
 	@NonNull
@@ -46,21 +44,8 @@ public class VariableStep implements Step {
 	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 	private Optional<TypedValue> originalTypedValue;
 
-	public VariableStep(ReadStrategy readStrategy, WriteStrategy writeStrategy, String sourceVariableName, String targetVariableName) {
-		this.readStrategy = readStrategy;
-		this.writeStrategy = writeStrategy;
-		this.sourceVariableName = sourceVariableName;
-		this.targetVariableName = targetVariableName;
-	}
-
-	public VariableStep(ReadStrategy readStrategy, WriteStrategy writeStrategy, String sourceVariableName, Conversion conversion) {
-		this.readStrategy = readStrategy;
-		this.writeStrategy = writeStrategy;
-		this.sourceVariableName = sourceVariableName;
-		this.conversion = conversion;
-	}
-
-	public VariableStep(ReadStrategy readStrategy, WriteStrategy writeStrategy, String sourceVariableName, String targetVariableName, Conversion conversion) {
+	@Builder
+	private VariableStep(ReadStrategy readStrategy, WriteStrategy writeStrategy, String sourceVariableName, String targetVariableName, Conversion conversion) {
 		this.readStrategy = readStrategy;
 		this.writeStrategy = writeStrategy;
 		this.sourceVariableName = sourceVariableName;

@@ -1,27 +1,27 @@
 package org.camunda.bpm.migration.plan.step.variable;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.camunda.bpm.migration.plan.step.Step;
 import org.camunda.bpm.migration.plan.step.StepExecutionContext;
-import org.camunda.bpm.migration.plan.step.variable.strategy.ReadStrategy;
+import org.camunda.bpm.migration.plan.step.variable.strategy.DeleteStrategy;
 
 /**
  * Deletes a variable.
  */
-@RequiredArgsConstructor
+@Builder
 public class VariableDeleteStep implements Step {
 
 	@NonNull
-	private ReadStrategy readStrategy;
+	private DeleteStrategy deleteStrategy;
 
 	@Setter @Getter @NonNull
 	private String variableName;
 
 	@Override
 	public void perform(StepExecutionContext context) {
-		readStrategy.remove(context, variableName);
+		deleteStrategy.remove(context, variableName);
 	}
 }

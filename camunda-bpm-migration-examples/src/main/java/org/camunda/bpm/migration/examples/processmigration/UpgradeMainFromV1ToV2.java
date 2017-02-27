@@ -34,35 +34,40 @@ public class UpgradeMainFromV1ToV2 {
 	private final ModelStep modelStep = new ModelStep(camundaMigrationPlanFactory);
 
 	private final ProcessDefinitionSpec v1 = ProcessDefinitionSpec.builder()
-            .versionTag("v1")
-            .processDefinitionKey("main")
-            .build();
+			.versionTag("v1")
+			.processDefinitionKey("main")
+			.build();
 
 	private final ProcessDefinitionSpec v2 = ProcessDefinitionSpec.builder()
-            .versionTag("v2")
-            .processDefinitionKey("main-redeploy")
-            .build();
+			.versionTag("v2")
+			.processDefinitionKey("main-redeploy")
+			.build();
 
 	private final Conversion convertInvoiceNumber = (TypedValue originalTypedValue) -> {
 		String invoiceNumber = originalTypedValue.getValue().toString().substring(4);
 		return Variables.longValue(Long.valueOf(invoiceNumber));
 	};
 
-	private final VariableStep rename_formField_19huq07_to_invoiceNumber = new VariableStep(
-					new ReadProcessVariable(), new WriteProcessVariable(),
-					"FormField_19huq07","invoiceNumber",
-					convertInvoiceNumber);
+	private final VariableStep rename_formField_19huq07_to_invoiceNumber = VariableStep.builder()
+			.readStrategy(new ReadProcessVariable())
+			.writeStrategy(new WriteProcessVariable())
+			.sourceVariableName("FormField_19huq07")
+			.targetVariableName("invoiceNumber")
+			.conversion(convertInvoiceNumber)
+			.build();
 
-	private final VariableStep create_variable_numPieces = new VariableStep(
-					new ReadConstantValue(Variables.longValue(1L)), new WriteProcessVariable(),
-					"numPieces");
+	private final VariableStep create_variable_numPieces = VariableStep.builder()
+			.readStrategy(new ReadConstantValue(Variables.longValue(1L)))
+			.writeStrategy(new WriteProcessVariable())
+			.sourceVariableName("numPieces")
+			.build();
 
 	private final MigrationPlan migrationPlan = MigrationPlan.builder()
-            .from(v1).to(v2)
-            .step(modelStep)
+			.from(v1).to(v2)
+			.step(modelStep)
 			.step(rename_formField_19huq07_to_invoiceNumber)
 			.step(create_variable_numPieces)
-            .build();
+			.build();
 
 	public void run() {
 		new Migrator(processEngine).migrate(migrationPlan);

@@ -11,6 +11,7 @@ import org.camunda.bpm.migration.plan.step.model.ModelStep;
 import org.camunda.bpm.migration.plan.step.variable.Conversion;
 import org.camunda.bpm.migration.plan.step.variable.VariableDeleteStep;
 import org.camunda.bpm.migration.plan.step.variable.VariableStep;
+import org.camunda.bpm.migration.plan.step.variable.strategy.DeleteStrategy;
 import org.camunda.bpm.migration.plan.step.variable.strategy.ReadConstantValue;
 import org.camunda.bpm.migration.plan.step.variable.strategy.ReadStrategy;
 import org.camunda.bpm.migration.plan.step.variable.strategy.WriteProcessVariable;
@@ -67,7 +68,11 @@ public class Snippets {
 		WriteStrategy writeStrategy = null;
 		String sourceVariableName = null;
 
-		VariableStep variableStep = new VariableStep(readStrategy, writeStrategy, sourceVariableName);
+		VariableStep variableStep = VariableStep.builder()
+				.readStrategy(readStrategy)
+				.writeStrategy(writeStrategy)
+				.sourceVariableName(sourceVariableName)
+				.build();
 	}
 
 	public void renameVariable() {
@@ -76,9 +81,12 @@ public class Snippets {
 		String sourceVariableName = null;
 		String targetVariableName = null;
 
-		VariableStep variableStep = new VariableStep(
-				readStrategy, writeStrategy,
-				sourceVariableName, targetVariableName);
+		VariableStep variableStep = VariableStep.builder()
+				.readStrategy(readStrategy)
+				.writeStrategy(writeStrategy)
+				.sourceVariableName(sourceVariableName)
+				.targetVariableName(targetVariableName)
+				.build();
 	}
 
 	public void changeVariableType() {
@@ -91,22 +99,32 @@ public class Snippets {
 			return Variables.longValue(Long.valueOf(invoiceNumberWithoutDelimiters));
 		};
 
-		VariableStep variableStep = new VariableStep(
-				readStrategy, writeStrategy,
-				sourceVariableName, conversionFunction);
+		VariableStep variableStep = VariableStep.builder()
+				.readStrategy(readStrategy)
+				.writeStrategy(writeStrategy)
+				.sourceVariableName(sourceVariableName)
+				.conversion(conversionFunction)
+				.build();
 	}
 
 	public void createNewVariable() {
 		ReadStrategy constantValue = new ReadConstantValue(Variables.integerValue(42));
 		WriteStrategy writeStrategy = new WriteProcessVariable();
 
-		VariableStep variableStep = new VariableStep(constantValue, writeStrategy, "theAnswer");
+		VariableStep variableStep = VariableStep.builder()
+				.readStrategy(constantValue)
+				.writeStrategy(writeStrategy)
+				.sourceVariableName("theAnswer")
+				.build();
 	}
 
 	public void deleteVariable() {
-		ReadStrategy readStrategy = null;
+		DeleteStrategy deleteStrategy = null;
 		String variableName = null;
 
-		VariableDeleteStep variableDeleteStep = new VariableDeleteStep(readStrategy, variableName);
+		VariableDeleteStep variableDeleteStep = VariableDeleteStep.builder()
+				.deleteStrategy(deleteStrategy)
+				.variableName(variableName)
+				.build();
 	}
 }
