@@ -45,6 +45,8 @@ hs_err_pid*
 
 # IntelliJ
 /out/
+.idea/
+*.iml
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
@@ -67,6 +69,3 @@ release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
-.gitignore
-.idea/
-camunda-bpm-migration.iml

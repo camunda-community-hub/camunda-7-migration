@@ -6,8 +6,8 @@ import lombok.Data;
 @Data
 @Builder
 public class ProcessDefinitionSpec {
-	private String processDefinitionKey;
-	private String versionTag;
-	private Integer processDefinitionVersion;
-	private DeploymentSpec deploymentSpec;
+  private String processDefinitionKey;
+  private String versionTag;
+  private Integer processDefinitionVersion;
+  private DeploymentSpec deploymentSpec;
 }
