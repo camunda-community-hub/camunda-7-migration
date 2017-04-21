@@ -7,8 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class ExampleProcessApplication extends SpringBootProcessApplication {
 
-	public static void main(String... args) {
-		SpringApplication.run(ExampleProcessApplication.class, args);
-	}
+  public static void main(String... args) {
+    SpringApplication.run(ExampleProcessApplication.class, args);
+  }
 
 }

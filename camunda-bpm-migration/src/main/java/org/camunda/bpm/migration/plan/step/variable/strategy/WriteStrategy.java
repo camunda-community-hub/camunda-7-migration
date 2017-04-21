@@ -8,12 +8,12 @@ import org.camunda.bpm.migration.plan.step.StepExecutionContext;
  */
 public interface WriteStrategy {
 
-	/**
-	 * Writes a variable named {@code variableName} with value {@code value}.
-	 *
-	 * @param stepExecutionContext the context of this strategy's execution
-	 * @param variableName the variable to write
-	 * @param value TypedValue to write, must not be null, but the TypedValue's value may.
-	 */
-	void write(StepExecutionContext stepExecutionContext, String variableName, TypedValue value);
+  /**
+   * Writes a variable named {@code variableName} with value {@code value}.
+   *
+   * @param stepExecutionContext the context of this strategy's execution
+   * @param variableName         the variable to write
+   * @param value                TypedValue to write, must not be null, but the TypedValue's value may.
+   */
+  void write(StepExecutionContext stepExecutionContext, String variableName, TypedValue value);
 }

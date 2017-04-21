@@ -1,11 +1,12 @@
 package org.camunda.bpm.migration.plan.step.model;
 
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import java.util.Collections;
+
 import org.camunda.bpm.migration.plan.step.Step;
 import org.camunda.bpm.migration.plan.step.StepExecutionContext;
 
-import java.util.Collections;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Executes a Camunda built-in migration plan.
@@ -13,14 +14,14 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class ModelStep implements Step {
 
-	@NonNull
-	private MigrationPlanFactory migrationPlanFactory;
+  @NonNull
+  private MigrationPlanFactory migrationPlanFactory;
 
-	@Override
-	public void perform(StepExecutionContext context) {
-		context.getProcessEngine().getRuntimeService()
-				.newMigration(migrationPlanFactory.apply(context.getSourceProcessDefinitionId(), context.getTargetProcessDefinitionId()))
-				.processInstanceIds(Collections.singletonList(context.getProcessInstanceId()))
-				.execute();
-	}
+  @Override
+  public void perform(StepExecutionContext context) {
+    context.getProcessEngine().getRuntimeService()
+      .newMigration(migrationPlanFactory.apply(context.getSourceProcessDefinitionId(), context.getTargetProcessDefinitionId()))
+      .processInstanceIds(Collections.singletonList(context.getProcessInstanceId()))
+      .execute();
+  }
 }

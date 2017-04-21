@@ -4,43 +4,44 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="processEngineConfiguration" class="org.camunda.bpm.engine.impl.cfg.StandaloneInMemProcessEngineConfiguration">
+  <bean id="processEngineConfiguration"
+        class="org.camunda.bpm.engine.impl.cfg.StandaloneInMemProcessEngineConfiguration">
 
-        <property name="jdbcUrl" value="jdbc:h2:mem:camunda;DB_CLOSE_DELAY=1000" />
-        <property name="jdbcDriver" value="org.h2.Driver" />
-        <property name="jdbcUsername" value="sa" />
-        <property name="jdbcPassword" value="" />
+    <property name="jdbcUrl" value="jdbc:h2:mem:camunda;DB_CLOSE_DELAY=1000"/>
+    <property name="jdbcDriver" value="org.h2.Driver"/>
+    <property name="jdbcUsername" value="sa"/>
+    <property name="jdbcPassword" value=""/>
 
-        <!-- Database configurations -->
-        <property name="databaseSchemaUpdate" value="true" />
+    <!-- Database configurations -->
+    <property name="databaseSchemaUpdate" value="true"/>
 
-        <!-- job executor configurations -->
-        <property name="jobExecutorActivate" value="false" />
+    <!-- job executor configurations -->
+    <property name="jobExecutorActivate" value="false"/>
 
-        <property name="history" value="full" />
+    <property name="history" value="full"/>
 
-        <property name="customPostBPMNParseListeners">
-            <list>
-                <bean class="org.camunda.bpm.engine.impl.bpmn.parser.FoxFailedJobParseListener" />
-            </list>
-        </property>
+    <property name="customPostBPMNParseListeners">
+      <list>
+        <bean class="org.camunda.bpm.engine.impl.bpmn.parser.FoxFailedJobParseListener"/>
+      </list>
+    </property>
 
-        <property name="failedJobCommandFactory" ref="foxFailedJobCommandFactory" />
+    <property name="failedJobCommandFactory" ref="foxFailedJobCommandFactory"/>
 
-        <!--<property name="idGenerator" ref="uuidGenerator" />-->
+    <!--<property name="idGenerator" ref="uuidGenerator" />-->
 
-        <!-- engine plugins -->
-        <property name="processEnginePlugins">
-            <list>
-            </list>
-        </property>
+    <!-- engine plugins -->
+    <property name="processEnginePlugins">
+      <list>
+      </list>
+    </property>
 
-    </bean>
+  </bean>
 
-    <bean id="foxFailedJobCommandFactory" class="org.camunda.bpm.engine.impl.jobexecutor.FoxFailedJobCommandFactory" />
+  <bean id="foxFailedJobCommandFactory" class="org.camunda.bpm.engine.impl.jobexecutor.FoxFailedJobCommandFactory"/>
 
-    <!--<bean id="uuidGenerator" class="org.camunda.bpm.engine.impl.persistence.StrongUuidGenerator" />-->
+  <!--<bean id="uuidGenerator" class="org.camunda.bpm.engine.impl.persistence.StrongUuidGenerator" />-->
 
-    <!-- engine plugin beans -->
+  <!-- engine plugin beans -->
 
 </beans>
