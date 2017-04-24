@@ -4,7 +4,7 @@
 
 ```java
 //please note that we do not(!) use Camunda's MigrationPlan
-import org.camunda.bpm.migration.plan.MigrationPlan;
+import MigrationPlan;
 
 //create the migration plan
 //source is a ProcessDefinitionSpec that specifies a single process definition who's instance shall be migrated
