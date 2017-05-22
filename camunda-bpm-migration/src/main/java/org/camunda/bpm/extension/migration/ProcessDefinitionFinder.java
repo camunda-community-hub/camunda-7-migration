@@ -44,9 +44,9 @@ public class ProcessDefinitionFinder {
   private DeploymentQuery createDeploymentQuery(DeploymentSpec spec) {
     DeploymentQuery query = repositoryService.createDeploymentQuery();
 
-    Function<ZonedDateTime, Date> toInstant = chain(ZonedDateTime::toInstant, Date::from);
-    add(query, DeploymentQuery::deploymentAfter, spec.getEarliestDeployment(), toInstant);
-    add(query, DeploymentQuery::deploymentBefore, spec.getLatestDeployment(), toInstant);
+    Function<ZonedDateTime, Date> toDate = chain(ZonedDateTime::toInstant, Date::from);
+    add(query, DeploymentQuery::deploymentAfter, spec.getEarliestDeployment(), toDate);
+    add(query, DeploymentQuery::deploymentBefore, spec.getLatestDeployment(), toDate);
     add(query, DeploymentQuery::deploymentSource, spec.getSource());
     add(query, DeploymentQuery::deploymentName, spec.getName());
     add(query, DeploymentQuery::tenantIdIn, spec.getTenantId(), s -> new String[]{s});
