@@ -30,16 +30,11 @@ public class ProcessDefinitionFinder {
     add(processDefinitionQuery, ProcessDefinitionQuery::versionTag, spec.getVersionTag());
     add(processDefinitionQuery, ProcessDefinitionQuery::processDefinitionVersion, spec.getProcessDefinitionVersion());
 
-    if (spec.getDeploymentSpec() != null) {
-      Optional<Deployment> deployment = findDeployment(spec.getDeploymentSpec());
-      if (!deployment.isPresent()) {
-        return Optional.empty();
-      } else {
-        add(processDefinitionQuery, ProcessDefinitionQuery::deploymentId, deployment.get(), Deployment::getId);
-      }
-    }
-
-    return Optional.ofNullable(processDefinitionQuery.singleResult());
+    return Optional.ofNullable(spec.getDeploymentSpec())
+      .flatMap(this::findDeployment)
+      .map(Deployment::getId)
+      .map(processDefinitionQuery::processDefinitionId)
+      .map(ProcessDefinitionQuery::singleResult);
   }
 
   private Optional<Deployment> findDeployment(DeploymentSpec spec) {
