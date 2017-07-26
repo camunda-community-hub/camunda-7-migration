@@ -3,11 +3,6 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.camunda.bpm.extension.migration</groupId>
-  <artifactId>camunda-bpm-migration-parent</artifactId>
-  <packaging>pom</packaging>
-  <version>1.0.0-SNAPSHOT</version>
-
   <!-- use camunda-release-parent for releasing to maven central and camunda nexus -->
   <parent>
     <groupId>org.camunda</groupId>
@@ -15,6 +10,11 @@
     <version>2.5</version>
     <relativePath/>
   </parent>
+
+  <groupId>org.camunda.bpm.extension.migration</groupId>
+  <artifactId>camunda-bpm-migration-parent</artifactId>
+  <packaging>pom</packaging>
+  <version>1.0.0-SNAPSHOT</version>
 
   <modules>
     <module>camunda-bpm-migration-examples</module>
@@ -28,41 +28,6 @@
     <java.version>${version.java}</java.version>
   </properties>
 
-  <!-- uncomment to add custom repositores if you need some
-    <repositories>
-        <repository>
-            <id>camunda-bpm-nexus</id>
-            <name>camunda-bpm-nexus</name>
-            <url>https://app.camunda.com/nexus/content/groups/public</url>
-        </repository>
-        <repository>
-            <id>jboss-public-repository</id>
-            <name>JBoss Repository</name>
-            <url>http://repository.jboss.org/nexus/content/groups/public</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>camunda-bpm-community-extensions</id>
-            <name>camunda BPM Snapshot Maven Repository</name>
-            <url>https://app.camunda.com/nexus/content/repositories/camunda-bpm-community-extensions</url>
-            <releases><enabled>true</enabled></releases>
-            <snapshots><enabled>false</enabled></snapshots>
-        </repository>
-        <repository>
-            <id>camunda-bpm-community-extensions-snapshots</id>
-            <name>camunda BPM Snapshot Maven Repository</name>
-            <url>https://app.camunda.com/nexus/content/repositories/camunda-bpm-community-extensions-snapshots</url>
-            <releases><enabled>false</enabled></releases>
-            <snapshots><enabled>true</enabled></snapshots>
-        </repository>
-    </repositories>
-    -->
-
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -75,21 +40,6 @@
     </dependencies>
   </dependencyManagement>
 
-  <!--<build>-->
-  <!--<defaultGoal>clean install</defaultGoal>-->
-  <!--<plugins>-->
-  <!--<plugin>-->
-  <!--<groupId>org.apache.maven.plugins</groupId>-->
-  <!--<artifactId>maven-compiler-plugin</artifactId>-->
-  <!--<configuration>-->
-  <!--<source>1.8</source>-->
-  <!--<target>1.8</target>-->
-  <!--</configuration>-->
-  <!--</plugin>-->
-  <!--</plugins>-->
-  <!--</build>-->
-
-  <!-- change to your license -->
   <licenses>
     <license>
       <name>The Apache Software License, Version 2.0</name>
@@ -97,13 +47,12 @@
     </license>
   </licenses>
 
-  <!-- replace YOUR_ARTIFACT_ID with your repository name -->
-  <!-- scm>
-        <connection>scm:git:git@github.com:camunda/camunda-bpm-migration.git</connection>
-        <url>scm:git:git@github.com:camunda/camunda-bpm-migration.git</url>
-        <developerConnection>scm:git:git@github.com:camunda/camunda-bpm-migration.git</developerConnection>
-        <tag>HEAD</tag>
-    </scm -->
+  <scm>
+    <connection>scm:git:git@github.com:camunda/camunda-bpm-migration.git</connection>
+    <url>scm:git:git@github.com:camunda/camunda-bpm-migration.git</url>
+    <developerConnection>scm:git:git@github.com:camunda/camunda-bpm-migration.git</developerConnection>
+    <tag>HEAD</tag>
+  </scm>
 
   <!-- repositories used for distribution of releases and snapshots, DO NOT CHANGE -->
   <distributionManagement>
