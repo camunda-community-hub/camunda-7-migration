@@ -13,7 +13,7 @@
   <groupId>org.camunda.bpm.extension.migration</groupId>
   <artifactId>camunda-bpm-migration-parent</artifactId>
   <packaging>pom</packaging>
-  <version>1.0</version>
+  <version>1.1-SNAPSHOT</version>
 
   <modules>
     <module>camunda-bpm-migration-examples</module>
@@ -50,7 +50,7 @@
     <connection>scm:git:git@github.com:camunda/camunda-bpm-migration.git</connection>
     <url>scm:git:git@github.com:camunda/camunda-bpm-migration.git</url>
     <developerConnection>scm:git:git@github.com:camunda/camunda-bpm-migration.git</developerConnection>
-    <tag>1.0</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <!-- repositories used for distribution of releases and snapshots, DO NOT CHANGE -->
