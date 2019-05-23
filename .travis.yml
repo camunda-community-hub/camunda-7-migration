@@ -1,7 +1,8 @@
+sudo: false
 language: java
-
 jdk:
   - oraclejdk8
+install: true
 
 
 #sudo: false # faster builds
