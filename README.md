@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/holisticon/camunda-bpm-migration.svg?branch=develop)](https://travis-ci.org/holisticon/camunda-bpm-migration)
+[![Build Status](https://travis-ci.org/camunda/camunda-bpm-migration.svg?branch=master)](https://travis-ci.org/holisticon/camunda-bpm-migration)
 
 # camunda-bpm-migration
 
