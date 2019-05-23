@@ -1,4 +1,5 @@
-[![Build Status](https://travis-ci.org/holisticon/camunda-bpm-migration.svg?branch=develop)](https://travis-ci.org/holisticon/camunda-bpm-migration)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.camunda.bpm.extension.migration/camunda-bpm-migration/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.camunda.bpm.extension.migration/camunda-bpm-migration)
+[![Build Status](https://travis-ci.org/camunda/camunda-bpm-migration.svg?branch=master)](https://travis-ci.org/camunda/camunda-bpm-migration)
 
 # camunda-bpm-migration
 
