@@ -7,17 +7,16 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
-
 import org.camunda.bpm.engine.variable.Variables;
 import org.camunda.bpm.engine.variable.value.TypedValue;
 import org.camunda.bpm.extension.migration.plan.step.StepExecutionContext;
-import org.camunda.bpm.extension.migration.plan.step.variable.strategy.WriteStrategy;
 import org.camunda.bpm.extension.migration.plan.step.variable.strategy.ReadStrategy;
+import org.camunda.bpm.extension.migration.plan.step.variable.strategy.WriteStrategy;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class VariableStepTest {

@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+// Do NOT make @Value since it is mocked in tests.
 @ToString
 @EqualsAndHashCode
 @Builder

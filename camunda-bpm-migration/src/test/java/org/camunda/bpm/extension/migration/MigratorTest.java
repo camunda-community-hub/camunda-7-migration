@@ -1,8 +1,7 @@
 package org.camunda.bpm.extension.migration;
 
 import static org.camunda.bpm.engine.test.assertions.bpmn.AbstractAssertions.processEngine;
-import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareAssertions.assertThat;
-import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.complete;
+import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.assertThat;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.repositoryService;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.runtimeService;
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.task;
@@ -15,14 +14,15 @@ import static org.mockito.Mockito.inOrder;
 import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
-
+import org.assertj.core.api.Assertions;
 import org.camunda.bpm.engine.repository.ProcessDefinition;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
+import org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests;
 import org.camunda.bpm.extension.migration.plan.MigrationPlan;
+import org.camunda.bpm.extension.migration.plan.ProcessDefinitionSpec;
 import org.camunda.bpm.extension.migration.plan.step.Step;
 import org.camunda.bpm.extension.migration.plan.step.StepExecutionContext;
-import org.camunda.bpm.extension.migration.plan.ProcessDefinitionSpec;
 import org.camunda.bpm.extension.migration.test.DummyProcessDeployer;
 import org.camunda.bpm.extension.migration.test.DummyProcessDeployerRule;
 import org.junit.Before;
@@ -35,7 +35,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InOrder;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MigratorTest {
@@ -99,7 +99,7 @@ public class MigratorTest {
     final String completedProcessInstanceId;
     {
       ProcessInstance processInstance = startInstance();
-      complete(task(processInstance));
+      BpmnAwareTests.complete(task(processInstance));
       assertThat(processInstance).isEnded();
       completedProcessInstanceId = processInstance.getId();
     }
@@ -117,7 +117,7 @@ public class MigratorTest {
     Set<String> processInstanceIds = stepExecutionContextCaptor.getAllValues().stream()
       .map(StepExecutionContext::getProcessInstanceId)
       .collect(Collectors.toSet());
-    assertThat(processInstanceIds).hasSize(1).contains(processInstanceId);
+    Assertions.assertThat(processInstanceIds).hasSize(1).contains(processInstanceId);
   }
 
   @Test

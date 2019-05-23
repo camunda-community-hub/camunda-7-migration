@@ -9,13 +9,9 @@ import org.junit.Test;
 
 public class DummyProcessBuilderTest {
 
-  @Rule
-  public ProcessEngineRule processEngineRule = new ProcessEngineRule();
-
   @Test
   public void build() {
     BpmnModelInstance modelInstance = DummyProcessBuilder.build("foo");
-
     assertThat(modelInstance).isNotNull();
   }
 
