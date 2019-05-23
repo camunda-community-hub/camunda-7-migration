@@ -6,14 +6,15 @@
   <parent>
     <groupId>org.camunda</groupId>
     <artifactId>camunda-release-parent</artifactId>
-    <version>2.5</version>
+    <version>3.3</version>
     <relativePath />
   </parent>
 
   <groupId>org.camunda.bpm.extension.migration</groupId>
   <artifactId>camunda-bpm-migration-parent</artifactId>
-  <packaging>pom</packaging>
+  <name>pom/${project.artifactId}</name>
   <version>1.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
 
   <modules>
     <module>camunda-bpm-migration-examples</module>
@@ -21,7 +22,7 @@
   </modules>
 
   <properties>
-    <camunda.version>7.6.0</camunda.version>
+    <camunda.version>7.10.0</camunda.version>
     <slf4j.version>1.7.16</slf4j.version>
     <version.java>1.8</version.java>
     <java.version>${version.java}</java.version>
