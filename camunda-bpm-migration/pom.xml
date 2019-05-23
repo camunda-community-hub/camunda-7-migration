@@ -8,6 +8,7 @@
   </parent>
 
   <artifactId>camunda-bpm-migration</artifactId>
+  <name>lib/${project.artifactId}</name>
 
   <dependencies>
     <dependency>
