@@ -23,7 +23,7 @@ public class ProcessDefinitionFinderTest {
   private static final String KEY_B = ProcessDefinitionFinderTest.class.getSimpleName() + "B";
   private static final String TAG_V1 = "v1";
   private static final String TAG_V2 = "v2";
-  private static final String SOURCE_1 = "source1";
+  public static final String SOURCE_1 = "source1";
   private static final String SOURCE_2 = "source2";
   private static final DummyProcessDeployer.DummyProcessDeployerBuilder DEPLOYER_BUILDER = DummyProcessDeployer.builder()
     .source(SOURCE_1)
@@ -40,14 +40,14 @@ public class ProcessDefinitionFinderTest {
   @Test
   public void find_by_processDefinitionKey() {
     ProcessDefinitionSpec spec = ProcessDefinitionSpec.builder().processDefinitionKey(KEY_B).build();
-    Optional<ProcessDefinition> processDefinition = finder.find(spec);
+    Optional<ProcessDefinition> processDefinition = finder.findOne(spec);
     assertThat(processDefinition.isPresent()).isTrue();
   }
 
   @Test
   public void find_by_versionTag() {
     ProcessDefinitionSpec spec = ProcessDefinitionSpec.builder().versionTag(TAG_V1).build();
-    Optional<ProcessDefinition> processDefinition = finder.find(spec);
+    Optional<ProcessDefinition> processDefinition = finder.findOne(spec);
     assertThat(processDefinition.isPresent()).isTrue();
   }
 
@@ -55,7 +55,7 @@ public class ProcessDefinitionFinderTest {
   public void find_by_version() {
     runWithAnotherDeployment(() -> {
       ProcessDefinitionSpec spec = ProcessDefinitionSpec.builder().processDefinitionVersion(2).build();
-      Optional<ProcessDefinition> processDefinition = finder.find(spec);
+      Optional<ProcessDefinition> processDefinition = finder.findOne(spec);
       assertThat(processDefinition.isPresent()).isTrue();
     });
   }
@@ -70,7 +70,7 @@ public class ProcessDefinitionFinderTest {
         .latestDeployment(ZonedDateTime.now())
         .build();
 
-      Optional<ProcessDefinition> processDefinition = finder.find(with(deploymentSpec));
+      Optional<ProcessDefinition> processDefinition = finder.findOne(with(deploymentSpec));
       assertThat(processDefinition.isPresent()).overridingErrorMessage("ProcessDefinition not found for %s", deploymentSpec).isTrue();
     });
   }
@@ -82,7 +82,7 @@ public class ProcessDefinitionFinderTest {
         .source(SOURCE_2)
         .build();
 
-      Optional<ProcessDefinition> processDefinition = finder.find(with(deploymentSpec));
+      Optional<ProcessDefinition> processDefinition = finder.findOne(with(deploymentSpec));
       assertThat(processDefinition.isPresent()).isTrue();
     });
   }
@@ -94,7 +94,7 @@ public class ProcessDefinitionFinderTest {
         .source("nonExistentSource")
         .build();
 
-      Optional<ProcessDefinition> processDefinition = finder.find(with(deploymentSpec));
+      Optional<ProcessDefinition> processDefinition = finder.findOne(with(deploymentSpec));
       assertThat(processDefinition.isPresent()).isFalse();
     });
   }

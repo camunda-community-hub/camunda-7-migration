@@ -42,6 +42,16 @@
 
   <build>
     <defaultGoal>clean install</defaultGoal>
+    <plugins>
+    <plugin>
+      <artifactId>maven-compiler-plugin</artifactId>
+      <version>3.5.1</version>
+      <configuration>
+        <source>${version.java}</source>
+        <target>${version.java}</target>
+      </configuration>
+    </plugin>
+    </plugins>
   </build>
 
   <licenses>

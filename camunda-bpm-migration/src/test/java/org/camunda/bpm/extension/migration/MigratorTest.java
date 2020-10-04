@@ -25,11 +25,11 @@ import org.camunda.bpm.extension.migration.plan.step.Step;
 import org.camunda.bpm.extension.migration.plan.step.StepExecutionContext;
 import org.camunda.bpm.extension.migration.test.DummyProcessDeployer;
 import org.camunda.bpm.extension.migration.test.DummyProcessDeployerRule;
+import org.camunda.bpm.extension.migration.test.MigrationTestRuleChain;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.junit.rules.RuleChain;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -41,22 +41,35 @@ import org.mockito.junit.MockitoJUnitRunner;
 public class MigratorTest {
 
   private static final String KEY = MigratorTest.class.getSimpleName();
-  private static final String V2 = "2.0";
-  private static final ProcessDefinitionSpec SPEC_V2 = ProcessDefinitionSpec.builder().processDefinitionKey(KEY).versionTag(V2).build();
+  private static final String SOURCE  = MigratorTest.class.getSimpleName();
+
   private static final String V1 = "1.0";
+  private static final String V2 = "2.0";
+
   private static final ProcessDefinitionSpec SPEC_V1 = ProcessDefinitionSpec.builder().processDefinitionKey(KEY).versionTag(V1).build();
+  private static final ProcessDefinitionSpec SPEC_V2 = ProcessDefinitionSpec.builder().processDefinitionKey(KEY).versionTag(V2).build();
 
   @Rule
-  public RuleChain ruleChain = RuleChain
-    .outerRule(new ProcessEngineRule())
-    .around(new DummyProcessDeployerRule(createDeployer(V1), createDeployer(V2)));
+  public final MigrationTestRuleChain ruleChain = new MigrationTestRuleChain(
+    new ProcessEngineRule(),
+    new DummyProcessDeployerRule(createDeployer(V1), createDeployer(V2))
+  );
 
   @Rule
-  public ExpectedException thrown = ExpectedException.none();
+  public final ExpectedException thrown = ExpectedException.none();
 
   private Migrator migrator;
-
   private MigrationPlan migrationPlan;
+
+  @Before
+  public void setup_stuff() {
+    migrator = new Migrator(processEngine());
+
+    migrationPlan = MigrationPlan.builder()
+      .from(SPEC_V1)
+      .to(SPEC_V2)
+      .build();
+  }
 
   @Captor
   private ArgumentCaptor<StepExecutionContext> stepExecutionContextCaptor;
@@ -94,6 +107,7 @@ public class MigratorTest {
     inOrder.verify(step).perform(any(StepExecutionContext.class));
   }
 
+
   @Test
   public void migrates_active_instances_only() {
     final String completedProcessInstanceId;
@@ -128,19 +142,9 @@ public class MigratorTest {
     migrator.migrate(migrationPlan);
   }
 
-  @Before
-  public void setup_stuff() {
-    migrator = new Migrator(processEngine());
-
-    migrationPlan = MigrationPlan.builder()
-      .from(SPEC_V1)
-      .to(SPEC_V2)
-      .build();
-  }
-
   private DummyProcessDeployer.DummyProcessDeployerBuilder createDeployer(String version) {
     return DummyProcessDeployer.builder()
-      .source(getClass().getSimpleName())
+      .source(SOURCE)
       .model(build(KEY, version));
   }
 

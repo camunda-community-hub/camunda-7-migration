@@ -31,8 +31,7 @@ public class DummyProcessDeployer {
   private Deployment deployment;
 
   public void deploy() {
-    DeploymentBuilder deploymentBuilder = repositoryService.createDeployment()
-      .source(source);
+    DeploymentBuilder deploymentBuilder = repositoryService.createDeployment().source(source);
     models.forEach(model -> deploymentBuilder.addModelInstance(resourceId(model), model));
     deployment = deploymentBuilder.deploy();
   }
@@ -41,7 +40,7 @@ public class DummyProcessDeployer {
     repositoryService.deleteDeployment(deployment.getId());
   }
 
-  private String resourceId(BpmnModelInstance model) {
+  public static String resourceId(BpmnModelInstance model) {
     return model.getDefinitions().getId() + ".bpmn";
   }
 

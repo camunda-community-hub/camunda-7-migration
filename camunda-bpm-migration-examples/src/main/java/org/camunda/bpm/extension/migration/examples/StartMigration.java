@@ -1,5 +1,6 @@
 package org.camunda.bpm.extension.migration.examples;
 
+import lombok.RequiredArgsConstructor;
 import org.camunda.bpm.extension.migration.examples.processmigration.UpgradeMainFromV1ToV2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,10 +10,10 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Slf4j
+@RequiredArgsConstructor
 public class StartMigration {
 
-  @Autowired
-  private UpgradeMainFromV1ToV2 upgradeMainFromV1ToV2;
+  private final UpgradeMainFromV1ToV2 upgradeMainFromV1ToV2;
 
   @GetMapping("/startMigration")
   public String start() {

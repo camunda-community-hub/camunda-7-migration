@@ -1,5 +1,6 @@
 package org.camunda.bpm.extension.migration.examples;
 
+import lombok.RequiredArgsConstructor;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.variable.Variables;
@@ -11,10 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Slf4j
+@RequiredArgsConstructor
 public class StartProcessListener {
 
-  @Autowired
-  private RuntimeService runtimeService;
+  private final RuntimeService runtimeService;
 
   @GetMapping("/startProcess")
   public String start() {
