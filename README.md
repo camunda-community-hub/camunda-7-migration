@@ -20,6 +20,17 @@ We add stuff like
 And maybe some day some fancy sh*t like
 * migrating only some instances, e.g. everything that is before that super-critical service task
 
+## Installation
+
+To use this extension, please add the following dependency to your `pom.xml`:
+```xml
+<dependency>
+  <groupId>org.camunda.bpm.extension.migration</groupId>
+  <artifactId>camunda-bpm-migration-parent</artifactId>
+  <version>1.0</version>
+</dependency>
+```
+
 ## PAQ (Possibly Asked Questions)
 
 ### Why are migration plans "stored" as Java code?
