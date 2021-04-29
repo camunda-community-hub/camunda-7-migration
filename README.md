@@ -1,5 +1,9 @@
+[![](https://img.shields.io/badge/Community%20Extension-An%20open%20source%20community%20maintained%20project-FF4700)](https://github.com/camunda-community-hub/community)
+[![](https://img.shields.io/badge/Lifecycle-Abandoned-lightgrey)](https://github.com/Camunda-Community-Hub/community/blob/main/extension-lifecycle.md#abandoned-)
+[![](https://img.shields.io/badge/Lifecycle-Needs%20Maintainer%20-ff69b4)](https://github.com/Camunda-Community-Hub/community/blob/main/extension-lifecycle.md#abandoned-)
+[![Build project with Maven](https://github.com/camunda-community-hub/camunda-bpm-migration/actions/workflows/build.yml/badge.svg)](https://github.com/camunda-community-hub/camunda-bpm-migration/actions/workflows/build.yml)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.camunda.bpm.extension.migration/camunda-bpm-migration/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.camunda.bpm.extension.migration/camunda-bpm-migration)
-[![Build Status](https://travis-ci.org/camunda/camunda-bpm-migration.svg?branch=master)](https://travis-ci.org/camunda/camunda-bpm-migration)
+
 
 # camunda-bpm-migration
 
