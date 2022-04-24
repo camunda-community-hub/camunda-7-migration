@@ -3,6 +3,7 @@
 [![](https://img.shields.io/badge/Lifecycle-Needs%20Maintainer%20-ff69b4)](https://github.com/Camunda-Community-Hub/community/blob/main/extension-lifecycle.md#abandoned-)
 [![Build project with Maven](https://github.com/camunda-community-hub/camunda-bpm-migration/actions/workflows/build.yml/badge.svg)](https://github.com/camunda-community-hub/camunda-bpm-migration/actions/workflows/build.yml)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.camunda.bpm.extension.migration/camunda-bpm-migration/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.camunda.bpm.extension.migration/camunda-bpm-migration)
+![Compatible with: Camunda Platform 7](https://img.shields.io/badge/Compatible%20with-Camunda%20Platform%207-26d07c)
 
 
 # camunda-bpm-migration
