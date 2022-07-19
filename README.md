@@ -6,9 +6,9 @@
 ![Compatible with: Camunda Platform 7](https://img.shields.io/badge/Compatible%20with-Camunda%20Platform%207-26d07c)
 
 
-# camunda-bpm-migration
+# camunda-7-migration
 
-camunda-bpm-migration is a framework for making process instance migration easier.
+camunda-7-migration is a framework for making process instance migration easier.
 It builds upon the migration functionality introduced in camunda BPM 7.5.
 
 Camunda already provides the ability to do a migration based on process definition mapping.
